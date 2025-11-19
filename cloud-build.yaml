@@ -1,0 +1,17 @@
+steps:
+  # Construir la imagen
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+        'build',
+        '-t', 'northamerica-south1-docker.pkg.dev/pruebasbroxchain/broxchain/cloud-run-source-deploy/fondo-inversion-i:$BUILD_ID',
+        '-t', 'northamerica-south1-docker.pkg.dev/pruebasbroxchain/broxchain/cloud-run-source-deploy/fondo-inversion-i:latest',
+        '.'
+    ]
+    
+  # Subir la imagen a Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'northamerica-south1-docker.pkg.dev/pruebasbroxchain/broxchain/cloud-run-source-deploy/fondo-inversion-i:$BUILD_ID']
+
+images:
+  - 'northamerica-south1-docker.pkg.dev/pruebasbroxchain/broxchain/cloud-run-source-deploy/fondo-inversion-i:$BUILD_ID'
+  - 'northamerica-south1-docker.pkg.dev/pruebasbroxchain/broxchain/cloud-run-source-deploy/fondo-inversion-i:latest'

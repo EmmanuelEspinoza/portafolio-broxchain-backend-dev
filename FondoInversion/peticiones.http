@@ -1,0 +1,176 @@
+# ______________________________________________________________________________________
+### AuthService
+POST {{baseUrl}}/auth/sso
+Content-type: Application/json
+
+{
+    "email": "rafael.perez@broxel.com",
+    "password": "12345"
+}
+
+# __________________________________________________________________________________________________________
+### Users Endpoints
+Get {{baseUrl}}/users/ HTTP/1.1
+####
+GET {{baseUrl}}/users/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMiLCJlbWFpbCI6Im1vY2FycmFuemEwOEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6Ik3Dk05JQ0EgRVNQRVJBTlpBIENBUlJBTlpBIFZBTERFWiIsImp0aSI6ImJjMGM5OWVlLTBhYzctNDMxMy05ZWQxLTNmNTY2NDgyYjQ0ZCIsIm5iZiI6MTc2Mjk1NjMwOCwiZXhwIjoxNzYyOTU3MjA4LCJpYXQiOjE3NjI5NTYzMDgsImlzcyI6ImJyb3hjaGFpbiIsImF1ZCI6ImJyb3hjaGFpbiJ9.H4lf6neWEGJwwbj-KlVtMRDIrEoaTZF589zFCRDPBa8
+####
+Post {{baseUrl}}/users
+Content-type: Application/Json
+
+{
+    "name": "RAFAEL PEREZ CASTILLO",
+    "rfc": "XAXX010101000",
+    "correo": "rafael.perez@broxel.com",
+    "telefono": "5574357032",
+    "curp": "PECR930809HMSF05"
+}
+
+####
+PUT {{baseUrl}}/users/11
+Content-type: Application/Json
+
+{
+    "curp": "PECR930809HMSF051"
+}
+
+####
+DELETE {{baseUrl}}/users/2
+# ________________________________________________________________________________________________________________________________________________________________
+####  PrecioEndpoint
+GET {{baseUrl}}/precios
+
+###
+GET {{baseUrl}}/precios/166
+
+###
+POST {{baseUrl}}/precios
+Content-type: Application/Json
+
+{
+    "FechaPrecio": "2020-01-01",
+    "PrecioMxn": 0.0223631
+}
+
+### 
+PUT {{baseUrl}}/precios/166
+Content-type: Application/Json
+
+{
+    "FechaPrecio": "2020-01-01",
+    "PrecioMxn": 23.89
+}
+
+###
+DELETE {{baseUrl}}/precios/166
+
+# __________________________________________________________________________
+####  Flujo Endpoint
+GET {{baseUrl}}/flujos
+
+###
+GET {{baseUrl}}/flujos/62
+
+###
+POST {{baseUrl}}/flujos
+Content-type: Application/Json
+
+{
+    "DiaMovimiento": "2020-01-01",
+    "Importe": 12.89,
+    "Comision": 12.89,
+    "InversionistaId": 1
+}
+
+### 
+PUT {{baseUrl}}/flujos/62
+Content-type: Application/Json
+
+{
+    "FechaPrecio": "2020-01-01",
+    "PrecioMxn": 23.89,
+    "InversionistaId": 1
+}
+
+###
+DELETE {{baseUrl}}/flujos/2
+
+# _____________________________________________________________________________
+# Servicios especiales  Usar estos 
+
+###
+POST {{baseUrl}}/precios/saldos
+Content-type: Application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIzIiwiZW1haWwiOiJtb2NhcnJhbnphMDhAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNw5NOSUNBIEVTUEVSQU5aQSBDQVJSQU5aQSBWQUxERVoiLCJqdGkiOiI1NGUxNWIwMS1jYTY3LTQ4MGEtYmFlYi0yYjdlYjc0ZjRlMzkiLCJuYmYiOjE3NjM1ODA1MzIsImV4cCI6MTc2MzU4MjMzMiwiaWF0IjoxNzYzNTgwNTMyLCJpc3MiOiJicm94Y2hhaW4iLCJhdWQiOiJicm94Y2hhaW4ifQ.K0dXBKi2IUqficBE6oR-gvnyEphb3b6zzOSNGg7jTro
+
+{
+    "userId" : 32,
+    "tipo": 1
+}
+
+###
+POST {{baseUrl}}/precios/saldos
+Content-type: Application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIzIiwiZW1haWwiOiJtb2NhcnJhbnphMDhAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJNw5NOSUNBIEVTUEVSQU5aQSBDQVJSQU5aQSBWQUxERVoiLCJqdGkiOiIwZWVjY2Q1NS1lODE3LTQxOTktYmRjOC04NzMwODBhNzM5MzIiLCJuYmYiOjE3NjM1ODAzNDEsImV4cCI6MTc2MzU4MjE0MSwiaWF0IjoxNzYzNTgwMzQxLCJpc3MiOiJicm94Y2hhaW4iLCJhdWQiOiJicm94Y2hhaW4ifQ.DurXoMQaFAnnKfXbTMWaApurfz931wv5qSvl886hPuA
+
+{
+    "userId" : 0,
+    "tipo": 0
+}
+###
+GET {{baseUrl}}/precios/saldos
+Content-type: Application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMiLCJlbWFpbCI6Im1vY2FycmFuemEwOEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6Ik3Dk05JQ0EgRVNQRVJBTlpBIENBUlJBTlpBIFZBTERFWiIsImp0aSI6ImJjMGM5OWVlLTBhYzctNDMxMy05ZWQxLTNmNTY2NDgyYjQ0ZCIsIm5iZiI6MTc2Mjk1NjMwOCwiZXhwIjoxNzYyOTU3MjA4LCJpYXQiOjE3NjI5NTYzMDgsImlzcyI6ImJyb3hjaGFpbiIsImF1ZCI6ImJyb3hjaGFpbiJ9.H4lf6neWEGJwwbj-KlVtMRDIrEoaTZF589zFCRDPBa8
+
+###
+GET {{baseUrl}}/precios
+Content-type: Application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMiLCJlbWFpbCI6Im1vY2FycmFuemEwOEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6Ik3Dk05JQ0EgRVNQRVJBTlpBIENBUlJBTlpBIFZBTERFWiIsImp0aSI6ImJjMGM5OWVlLTBhYzctNDMxMy05ZWQxLTNmNTY2NDgyYjQ0ZCIsIm5iZiI6MTc2Mjk1NjMwOCwiZXhwIjoxNzYyOTU3MjA4LCJpYXQiOjE3NjI5NTYzMDgsImlzcyI6ImJyb3hjaGFpbiIsImF1ZCI6ImJyb3hjaGFpbiJ9.H4lf6neWEGJwwbj-KlVtMRDIrEoaTZF589zFCRDPBa8
+
+###
+GET {{baseUrl}}/precios/flujoPrecios/3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMiLCJlbWFpbCI6Im1vY2FycmFuemEwOEBnbWFpbC5jb20iLCJ1bmlxdWVfbmFtZSI6Ik3Dk05JQ0EgRVNQRVJBTlpBIENBUlJBTlpBIFZBTERFWiIsImp0aSI6Ijc0NTllNmQ3LTM0OTItNGJhYi05MTljLWZiMjk5ODUxYzQxMiIsIm5iZiI6MTc2Mjk4NjUzNSwiZXhwIjoxNzYyOTg4MzM1LCJpYXQiOjE3NjI5ODY1MzUsImlzcyI6ImJyb3hjaGFpbiIsImF1ZCI6ImJyb3hjaGFpbiJ9.TN9QYi7bFe6EV6I6yZSGxTKihCt2BI3CQmAn2rywcu0
+
+
+
+# ______________________________________________________________________________________
+### AuthService
+POST {{baseUrl}}/auth/sso
+Content-type: Application/json
+
+{
+    "email": "mocarranza08@gmail.com",
+    "password": "12345"
+}
+###
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{
+    "RefreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIzIiwidG9rZW5UeXBlIjoicmVmcmVzaCIsImp0aSI6IjcxYWIzYmY4LTcyOTgtNGE1NS1hMTMxLTYxMGNhYWI4NWI5ZSIsIm5iZiI6MTc2MzQ4OTQ3NiwiZXhwIjoxNzY0MDk0Mjc2LCJpYXQiOjE3NjM0ODk0NzYsImlzcyI6ImJyb3hjaGFpbiIsImF1ZCI6ImJyb3hjaGFpbiJ9.ZuYbaYP1QG9jkgv3kc7L7A0_WII5c0qf1LjIjTNA3zw"
+}
+
+### 
+POST {{baseUrl}}/auth/validate
+Content-Type: application/json
+
+
+{
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExIiwiZW1haWwiOiJyYWZhZWwucGVyZXpAYnJveGVsLmNvbSIsInVuaXF1ZV9uYW1lIjoiUkFGQUVMIFBFUkVaIENBU1RJTExPIiwianRpIjoiNGEzNjIzZmMtY2QwZi00Mzk4LTk0OWUtYWJlZWNmZmNkZjQwIiwibmJmIjoxNzYyNDQzNjM2LCJleHAiOjE3NjI0NTA4MzYsImlhdCI6MTc2MjQ0MzYzNiwiaXNzIjoiYnJveGNoYWluIiwiYXVkIjoiYnJveGNoYWluIn0.fHgmpyqztqShtEYydWPh0M4v8Uz9M2neAOdiVhSwh8o"
+}
+
+### 
+POST {{baseUrl}}/auth/revoke
+Content-Type: application/json
+
+{
+    "RefreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIzIiwidG9rZW5UeXBlIjoicmVmcmVzaCIsImp0aSI6IjMyM2M2NGViLTVmMGYtNGVjMi04ZDEwLWNkODYyMWU0MTNlMyIsIm5iZiI6MTc2MzQ5MDE5NiwiZXhwIjoxNzY0MDk0OTk2LCJpYXQiOjE3NjM0OTAxOTYsImlzcyI6ImJyb3hjaGFpbiIsImF1ZCI6ImJyb3hjaGFpbiJ9.URtEYtjeikcAsO8hieCy53h7rRA9A31cuzpO_dOSXUE"
+}
+
+### Logout
+POST {{baseUrl}}/auth/logout
+Content-type: Application/json
+
+{
+     "RefreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIzIiwidG9rZW5UeXBlIjoicmVmcmVzaCIsImp0aSI6ImU3NzNhYTQzLTBlY2QtNDZjNS05YmJlLTU5Y2NkMmQ3ZDcyOSIsIm5iZiI6MTc2MzQ5MzgzNywiZXhwIjoxNzY0MDk4NjM3LCJpYXQiOjE3NjM0OTM4MzcsImlzcyI6ImJyb3hjaGFpbiIsImF1ZCI6ImJyb3hjaGFpbiJ9.GhsTqoRUN3geQ2C-A6xP5KJA6opfS9LcRMbw6mRhjxA"
+}

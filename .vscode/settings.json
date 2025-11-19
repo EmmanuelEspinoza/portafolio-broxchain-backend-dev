@@ -1,0 +1,22 @@
+{
+    "rest-client.environmentVariables": {
+        "$shared": {
+            "version": "v1",
+            "prodToken": "foo",
+            "nonProdToken": "bar"
+        },
+        "local": {
+            "version": "v2",
+            "host": "localhost",
+            "token": "{{$shared nonProdToken}}",
+            "secretKey": "devSecret",
+            "baseUrl": "http://localhost:5124/api"
+        },
+        "production": {
+            "host": "example.com",
+            "token": "{{$shared prodToken}}",
+            "secretKey": "prodSecret",
+            "baseUrl": "https://fondo-inversion-service-991595227055.northamerica-south1.run.app/api"
+        }
+    }
+}

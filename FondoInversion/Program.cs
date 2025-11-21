@@ -10,7 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Agregar DbContext con SQL Server
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlOptions => sqlOptions.EnableRetryOnFailure()
     )
 );
 
@@ -20,6 +21,7 @@ builder.Services.AddTransient<IPrecioRepository, PrecioRepository>();
 builder.Services.AddTransient<IFlujoRepository, FlujoRepository>();
 builder.Services.AddTransient<ITokenRepository, TokenRepository>();
 builder.Services.AddTransient<IEventLogRepository, EventLogRepository>();
+builder.Services.AddTransient<ICurrentUserService, CurrentUserService>();
 
 // Registro de servicios
 builder.Services.AddTransient<UserService>();
@@ -27,8 +29,11 @@ builder.Services.AddTransient<PrecioService>();
 builder.Services.AddTransient<FlujoService>();
 builder.Services.AddTransient<TokenService>();
 builder.Services.AddTransient<EventLogService>();
+builder.Services.AddTransient<CurrentUserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddTransient<ICSVService, CSVService>();
+
+builder.Services.AddHttpContextAccessor();
 
 
 builder.Services.AddScoped<JwtAuthorizeAttribute>();
@@ -56,7 +61,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
         policy =>
         {
-            policy.WithOrigins(["http://localhost:4200", "https://fondo-inversion-front-991595227055.northamerica-south1.run.app"])
+            policy.WithOrigins(["http://localhost:4200", "https://localhost:7169", "https://fondo-inversion-front-991595227055.northamerica-south1.run.app"])
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();

@@ -1,7 +1,6 @@
-using FondoInversion.Data;
+using System.Text.Json;
 using FondoInversion.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 
 [ApiController]
@@ -9,14 +8,19 @@ using Microsoft.EntityFrameworkCore;
 public class PreciosController : ControllerBase
 {
     private readonly PrecioService _precioService;
-    private readonly ILogger<PreciosController> _logger;
+    // private readonly ILogger<PreciosController> _logger;
     private readonly EventLogService _eventLogService;
+    
+    private readonly CurrentUserService _currentUser;
 
-    public PreciosController(PrecioService precioService, ILogger<PreciosController> logger, EventLogService eventLogService)
+    public PreciosController(PrecioService precioService,  EventLogService eventLogService, CurrentUserService currentUser
+    //  ILogger<PreciosController> logger
+     )
     {
-        _logger = logger;
+        // _logger = logger;
         _precioService = precioService;
         _eventLogService = eventLogService;
+        _currentUser = currentUser;
     }
 
     [JwtAuthorize] 
@@ -40,7 +44,8 @@ public class PreciosController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error al obtener Precio con ID: {Id}", id);
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error, id.ToString());
             return StatusCode(500, "Error interno del servidor");
         }
     }
@@ -57,7 +62,8 @@ public class PreciosController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error al crear nuevo Precio");
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error,JsonSerializer.Serialize(createPrecio));
             return StatusCode(500, "Error interno del servidor");
         }
     }
@@ -76,7 +82,8 @@ public class PreciosController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error al actualizar Precio con ID: {Id}", id);
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error,JsonSerializer.Serialize(precioUpdate));
             return StatusCode(500, "Error interno del servidor");
         }
     }
@@ -94,7 +101,8 @@ public class PreciosController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error al eliminar Precio con ID: {Id}", id);
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error, id.ToString());
             return StatusCode(500, "Error interno del servidor");
         }
     }
@@ -105,21 +113,21 @@ public class PreciosController : ControllerBase
     {
         try
         {
-            var result = await _precioService.getSaldos(getSaldo);
+            var userId = int.Parse( _currentUser.GetUserId());
+            var result = await _precioService.getSaldos((int)getSaldo.tipo, userId);
             return result;
         }
         catch (Exception ex)
         {
 
             var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
-            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error, "");
-            _logger.LogError(ex, "Error al realizar los calculos ");
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error,JsonSerializer.Serialize(getSaldo));
             return StatusCode(500, "Error interno del servidor");
         }
     }
 
     [JwtAuthorize] 
-    [HttpGet("saldos")]
+    [HttpGet("valoresMercado")]
     public async Task<ActionResult<ValoresMercado>> GetValoresMercado()
     {
         try
@@ -130,24 +138,25 @@ public class PreciosController : ControllerBase
         catch (Exception ex)
         {
             await _eventLogService.SaveEventLog(ex.Message, ETipoMessage.Error, "");
-            _logger.LogError(ex, "Error al obtener los valores del mercado");
             return StatusCode(500, "Error al obtener el valor de mercado");
         }
     }
 
 
     [JwtAuthorize] 
-    [HttpGet("flujoPrecios/{id}")]
-    public async Task<ActionResult<List<FlujoPrecio>>> GetFlujosPrecioByUser(int id)
+    [HttpGet("flujoPrecios")]
+    public async Task<ActionResult<List<FlujoPrecio>>> GetFlujosPrecioByUser()
     {
         try
         {
-            var result = await _precioService.GetFlujosPrecioByUser(id);
+            var userId = int.Parse( _currentUser.GetUserId());
+            var result = await _precioService.GetFlujosPrecioByUser(userId);
             return result;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error al obtener los saldos y movimientos del usuario");
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error, "");
             return StatusCode(500, "Error al obtener los saldos y movimientos del usuario");
         }
     }

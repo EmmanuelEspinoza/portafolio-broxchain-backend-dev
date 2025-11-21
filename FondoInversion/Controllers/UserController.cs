@@ -9,7 +9,8 @@ public class UsersController : ControllerBase
     private readonly UserService _userService;
     private readonly ILogger<UsersController> _logger;
 
-    public UsersController(UserService userService, ILogger<UsersController> logger)
+
+    public UsersController(UserService userService,  ILogger<UsersController> logger)
     {
         _userService = userService;
         _logger = logger;

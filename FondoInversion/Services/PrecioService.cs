@@ -175,11 +175,12 @@ public class PrecioService
         return true;
     }
 
-    public async Task<List<SaldosDtos>> getSaldos(GetSaldoDto getSaldo)
+    public async Task<List<SaldosDtos>> getSaldos(int tipo, int userID = 0)
     {
-        if (getSaldo.tipo == TipoSaldo.General)
+        if (tipo == (int)TipoSaldo.General)
             return await GetSaldoGeneric();
-        return await GetSaldoByUser(getSaldo.userId);
+        
+        return await GetSaldoByUser(userID);
     }
 
     private async Task<List<SaldosDtos>> GetSaldoByUser(int userId)

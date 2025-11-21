@@ -22,7 +22,7 @@ WORKDIR /FondoInversion
 COPY --from=build /FondoInversion/publish .
 
 # Copiar base de datos y scripts al contenedor (opcional si se descargan desde bucket)
-COPY DB ./DB
+# COPY DB ./DB
 
 # Descargar DB desde bucket (si existe), luego ejecutar app
 ENTRYPOINT ["dotnet", "FondoInversion.dll"]

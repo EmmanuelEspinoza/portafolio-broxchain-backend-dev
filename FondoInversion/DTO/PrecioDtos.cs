@@ -27,7 +27,6 @@ public class EditPrecioDto
 
 public class GetSaldoDto
 {
-    public int userId { get; set; }
     public TipoSaldo tipo { get; set; }
 }
 

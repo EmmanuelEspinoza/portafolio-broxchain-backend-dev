@@ -116,16 +116,6 @@ public class AuthController : ControllerBase
         }
     }
 
-    private bool IsWebRequest(HttpRequest request)
-    {
-        // Detectar si es una request de navegador web
-        var userAgent = request.Headers["User-Agent"].ToString();
-        return userAgent.Contains("Mozilla") ||
-                userAgent.Contains("Chrome") ||
-                userAgent.Contains("Safari");
-    }
-
-
     [JwtAuthorize]
     [HttpPost("validate")]
     public async Task<IActionResult> Validate([FromBody] ValidateTokenRequest request)
@@ -193,6 +183,14 @@ public class AuthController : ControllerBase
         Response.Cookies.Delete("refreshToken");
     }
 
+    private bool IsWebRequest(HttpRequest request)
+    {
+        // Detectar si es una request de navegador web
+        var userAgent = request.Headers["User-Agent"].ToString();
+        return userAgent.Contains("Mozilla") ||
+                userAgent.Contains("Chrome") ||
+                userAgent.Contains("Safari");
+    }
 
 }
 

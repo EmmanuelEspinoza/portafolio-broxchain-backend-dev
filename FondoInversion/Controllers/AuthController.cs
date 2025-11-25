@@ -1,4 +1,4 @@
-using FondoInversion.Models;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -7,10 +7,14 @@ using Microsoft.IdentityModel.Tokens;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
+    private readonly EventLogService _eventLogService;
+    private readonly AesEncryptionService _aesEncryptionService;
 
-    public AuthController(IAuthService authService)
+    public AuthController(IAuthService authService, EventLogService eventLogService, AesEncryptionService aesEncryptionSerice)
     {
         _authService = authService;
+        _eventLogService = eventLogService;
+        _aesEncryptionService = aesEncryptionSerice;
     }
 
     [HttpPost("sso")]
@@ -20,10 +24,13 @@ public class AuthController : ControllerBase
         {
             var authResponse = await _authService.AuthenticateWithSSO(ssoData);
 
+            var ecAccesToken = await _aesEncryptionService.EncryptAsync(authResponse.AccessToken);
+            var ecRefrhesrToken = await _aesEncryptionService.EncryptAsync(authResponse.RefreshToken);
+
             if (useCookies && IsWebRequest(Request))
             {
                 // Para web: usar cookies
-                SetTokenCookies(authResponse.AccessToken, authResponse.RefreshToken);
+                SetTokenCookies(ecAccesToken, ecRefrhesrToken);
                 return Ok(new AuthResponse
                 {
                     User = authResponse.User,
@@ -35,8 +42,8 @@ public class AuthController : ControllerBase
                 // Para móvil: devolver tokens en el body
                 return Ok(new AuthResponse
                 {
-                    AccessToken = authResponse.AccessToken,
-                    RefreshToken = authResponse.RefreshToken,
+                    AccessToken = ecAccesToken,
+                    RefreshToken = ecRefrhesrToken,
                     User = authResponse.User,
                     ExpiresAt = authResponse.ExpiresAt
                 });
@@ -44,10 +51,14 @@ public class AuthController : ControllerBase
         }
         catch (UnauthorizedAccessException ex)
         {
-            return Unauthorized(new { message = ex.Message });
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error,JsonSerializer.Serialize(ssoData));
+            return Unauthorized(new { message = "Error durante la autenticación"});
         }
         catch (Exception ex)
         {
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error,JsonSerializer.Serialize(ssoData));
             return BadRequest(new { message = "Error durante la autenticación" });
         }
     }
@@ -107,11 +118,16 @@ public class AuthController : ControllerBase
         catch (SecurityTokenException ex)
         {
             ClearTokenCookies();
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error,JsonSerializer.Serialize(request));
             return Unauthorized(new { message = ex.Message });
         }
         catch (Exception ex)
         {
+            ClearTokenCookies();
 
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error,JsonSerializer.Serialize(request));
             return BadRequest(new { message = "Error durante la renovación del token" });
         }
     }
@@ -122,7 +138,8 @@ public class AuthController : ControllerBase
     {
         try
         {
-            var user = await _authService.ValidateToken(request.Token);
+            var token = await _aesEncryptionService.DecryptAsync(request.Token);
+            var user = await _authService.ValidateToken(token);
             if (user == null)
                 return Unauthorized();
 
@@ -131,7 +148,9 @@ public class AuthController : ControllerBase
         catch (Exception ex)
         {
 
-            return StatusCode(500, ex.Message); 
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error,JsonSerializer.Serialize(request));
+            return StatusCode(500, "ocurrio un error durante la validación del token"); 
         }
 
     }
@@ -139,18 +158,38 @@ public class AuthController : ControllerBase
     [HttpPost("revoke")]
     public async Task<IActionResult> RevokeToken([FromBody] RefreshTokenRequest request)
     {
-        var result = await _authService.RevokeRefreshToken(request.RefreshToken);
-        if (result)
-            return Ok(new { message = "Token revocado exitosamente" });
+        try
+        {
+            var token = await _aesEncryptionService.DecryptAsync(request.RefreshToken);
+            var result = await _authService.RevokeRefreshToken(token);
+            if (result)
+                return Ok(new { message = "Token revocado exitosamente" });
 
-        return BadRequest(new { message = "Error al revocar el token" });
+            return BadRequest(new { message = "Error al revocar el token" });
+        }
+        catch (Exception ex)
+        {
+            
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error,JsonSerializer.Serialize(request));
+            return BadRequest(new {message = "error al revocar el token "});
+        }
     }
 
     [HttpPost("logout")]
     public async Task<IActionResult> Logout([FromBody] RefreshTokenRequest request)
     {
-        ClearTokenCookies();
-        return await RevokeToken(request);
+        try
+        {   
+            ClearTokenCookies();
+            return await RevokeToken(request);
+        }
+        catch (Exception ex)
+        {
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error,JsonSerializer.Serialize(request));
+            return StatusCode(500, "Error al cerrar la sesión");
+        }
     }
 
     private void SetTokenCookies(string accessToken, string refreshToken)

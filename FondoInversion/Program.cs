@@ -16,22 +16,24 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 );
 
 // Registro de repositorios 
+builder.Services.AddTransient<IEncryptionService, AesEncryptionService>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IPrecioRepository, PrecioRepository>();
 builder.Services.AddTransient<IFlujoRepository, FlujoRepository>();
 builder.Services.AddTransient<ITokenRepository, TokenRepository>();
 builder.Services.AddTransient<IEventLogRepository, EventLogRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddTransient<ICSVService, CSVService>();
 builder.Services.AddTransient<ICurrentUserService, CurrentUserService>();
 
 // Registro de servicios
+builder.Services.AddTransient<AesEncryptionService>();
 builder.Services.AddTransient<UserService>();
 builder.Services.AddTransient<PrecioService>();
 builder.Services.AddTransient<FlujoService>();
 builder.Services.AddTransient<TokenService>();
 builder.Services.AddTransient<EventLogService>();
 builder.Services.AddTransient<CurrentUserService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddTransient<ICSVService, CSVService>();
 
 builder.Services.AddHttpContextAccessor();
 

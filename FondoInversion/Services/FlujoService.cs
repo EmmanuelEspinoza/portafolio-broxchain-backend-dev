@@ -72,7 +72,6 @@ public class FlujoService
             HasHeaderRecord = true,
             MissingFieldFound = null,
             BadDataFound = null
-            // Eliminamos ShouldSkipRecord ya que no funciona como esperábamos
         };
 
         using (var reader = new StreamReader(stream))

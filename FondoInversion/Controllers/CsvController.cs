@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -7,14 +8,18 @@ public class CSVController : ControllerBase
     private readonly ICSVService _csvService;
     private readonly PrecioService _precioService;
     private readonly FlujoService _flujoService;
-    private readonly ILogger<CSVController> _logger;
+    // private readonly ILogger<CSVController> _logger;
+    private readonly EventLogService _eventLogService;
 
-    public CSVController(ICSVService csvService, ILogger<CSVController> logger, PrecioService precioService, FlujoService flujoService)
+    public CSVController(ICSVService csvService, PrecioService precioService, FlujoService flujoService, EventLogService eventLogService
+    // ILogger<CSVController> logger, 
+    )
     {
         _csvService = csvService;
-        _logger = logger;
+        // _logger = logger;
         _precioService = precioService;
         _flujoService = flujoService;
+        _eventLogService = eventLogService;
     }
 
     [JwtAuthorize] 
@@ -58,7 +63,8 @@ public class CSVController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error al procesar el archivo CSV");
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error,file.Name);
             return StatusCode(500, $"Error interno del servidor: {ex.Message}");
         }
     }
@@ -104,7 +110,8 @@ public class CSVController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error al procesar el archivo CSV");
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error,file.Name);
             
             return StatusCode(500, $"Error interno del servidor: {ex.Message}");
         }

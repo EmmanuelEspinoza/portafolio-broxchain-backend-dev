@@ -12,18 +12,25 @@ public class TokenService
     private readonly ILogger<TokenService> _logger;
     private readonly IUserRepository _userRepository;
 
-    public TokenService(IConfiguration configuration, ITokenRepository tokenRepository, IUserRepository userRepository, ILogger<TokenService> logger)
+    private readonly AesEncryptionService _aesEncryptionService;
+
+    public TokenService(IConfiguration configuration, ITokenRepository tokenRepository, IUserRepository userRepository, ILogger<TokenService> logger, AesEncryptionService aesEncryptionService)
     {
         _tokenRepository = tokenRepository;
         _userRepository = userRepository;
         _configuration = configuration;
         _logger = logger;
+        _aesEncryptionService = aesEncryptionService;
     }
 
     public async Task<AuthResponse> RefreshToken(string refreshToken)
     {
         try
         {
+
+            // Desencryptar el refreshtoken
+            refreshToken = await _aesEncryptionService.DecryptAsync(refreshToken);
+
             var expires = DateTime.UtcNow.AddDays(7);
             var userRefreshToken = await _tokenRepository.GetDataByRefreshToken(refreshToken);
 

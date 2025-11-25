@@ -1,3 +1,4 @@
+using System.Text.Json;
 using FondoInversion.Data;
 using FondoInversion.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -7,19 +8,34 @@ using Microsoft.AspNetCore.Mvc;
 public class FlujosController : ControllerBase
 {
     private readonly FlujoService _flujoService;
-    private readonly ILogger<FlujosController> _logger;
-    public FlujosController(FlujoService flujoService, ILogger<FlujosController> logger)
+    // private readonly ILogger<FlujosController> _logger;
+    private readonly EventLogService _eventLogService;
+    public FlujosController(FlujoService flujoService,  EventLogService eventLogService 
+    // ILogger<FlujosController> logger,
+    )
     {
-        _logger = logger;
+        // _logger = logger;
         _flujoService = flujoService;
+        _eventLogService = eventLogService;
     }
 
     [JwtAuthorize] 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<flujo>>> GetFlujos()
     {
-        var flujos = await _flujoService.GetAllFlujosAsync();
-        return Ok(flujos);
+        try
+        {
+            var flujos = await _flujoService.GetAllFlujosAsync();
+            return Ok(flujos);
+            
+        }
+        catch (Exception ex)
+        {
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error,"");
+            
+            return StatusCode(500, "Error al ");
+        }
     }
 
     [JwtAuthorize] 
@@ -36,8 +52,9 @@ public class FlujosController : ControllerBase
             return flujo;
         }
         catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error al obtener el flujo con ID: {Id}", id);
+        {            
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error,JsonSerializer.Serialize(id.ToString()));
             return StatusCode(500, "Error interno del servidor");
         }
     }
@@ -46,7 +63,7 @@ public class FlujosController : ControllerBase
     // POST: api/Flujos
     [JwtAuthorize] 
     [HttpPost]
-    public async Task<ActionResult<flujo>> PostUser(CreateFlujoDto createFlujo)
+    public async Task<ActionResult<flujo>> PostFLujo(CreateFlujoDto createFlujo)
     {
         try
         {
@@ -56,8 +73,9 @@ public class FlujosController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error al crear nuevo Flujo");
-            return StatusCode(500, "Error interno del servidor");
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error,JsonSerializer.Serialize(createFlujo));
+            return StatusCode(500, "Error al subir el flujo");
         }
     }
 
@@ -73,8 +91,9 @@ public class FlujosController : ControllerBase
             return NoContent();
         }
         catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error al actualizar el flujo con ID: {Id}", id);
+        {           
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error,JsonSerializer.Serialize(flujoUpdate));
             return StatusCode(500, "Error interno del servidor");
         }
     }
@@ -92,7 +111,8 @@ public class FlujosController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error al eliminar flujo con ID: {Id}", id);
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error,id.ToString());
             return StatusCode(500, "Error interno del servidor");
         }
     }
@@ -112,7 +132,8 @@ public class FlujosController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error al obtener el flujo con ID: {Id}", id);
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error,id.ToString());
             return StatusCode(500, "Error interno del servidor");
         }
     }

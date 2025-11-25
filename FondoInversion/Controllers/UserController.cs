@@ -1,3 +1,4 @@
+using System.Text.Json;
 using FondoInversion.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,24 +8,37 @@ using Microsoft.AspNetCore.Mvc;
 public class UsersController : ControllerBase
 {
     private readonly UserService _userService;
-    private readonly ILogger<UsersController> _logger;
+    // private readonly ILogger<UsersController> _logger;
+    private readonly EventLogService _eventLogService;
 
 
-    public UsersController(UserService userService,  ILogger<UsersController> logger)
+    public UsersController(UserService userService, EventLogService eventLogService
+    // ILogger<UsersController> logger
+    )
     {
         _userService = userService;
-        _logger = logger;
+        _eventLogService = eventLogService;
+        // _logger = logger;
     }
 
-    [JwtAuthorize] 
+    [JwtAuthorize]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<user>>> GetUsers()
     {
-        var users = await _userService.GetAllUsersAsync();
-        return Ok(users);
+        try
+        {
+            var users = await _userService.GetAllUsersAsync();
+            return Ok(users);
+        }
+        catch (Exception ex)
+        {
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error, "");
+            return StatusCode(500, "Error al obtener la información");
+        }
     }
 
-    [JwtAuthorize] 
+    [JwtAuthorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<user>> GetUser(int id)
     {
@@ -39,13 +53,14 @@ public class UsersController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error al obtener User con ID: {Id}", id);
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error, id.ToString());
             return StatusCode(500, "Error interno del servidor");
         }
     }
 
     // POST: api/Users
-    [JwtAuthorize] 
+    [JwtAuthorize]
     [HttpPost]
     public async Task<ActionResult<user>> PostUser(CreateUserDto createUser)
     {
@@ -56,13 +71,14 @@ public class UsersController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error al crear nuevo User");
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error, JsonSerializer.Serialize(createUser));
             return StatusCode(500, "Error interno del servidor: ");
         }
     }
 
     // PUT: api/Users/5
-    [JwtAuthorize] 
+    [JwtAuthorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> PutUser(int id, EditUserDto userUpdate)
     {
@@ -76,7 +92,8 @@ public class UsersController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error al actualizar User con ID: {Id}", id);
+            var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
+            await _eventLogService.SaveEventLog(exception, ETipoMessage.Error, JsonSerializer.Serialize(userUpdate));
             return StatusCode(500, "Error interno del servidor");
         }
     }

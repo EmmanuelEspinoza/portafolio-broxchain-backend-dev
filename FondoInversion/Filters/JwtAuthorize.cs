@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.DependencyInjection;
 using System.IdentityModel.Tokens.Jwt;
 using FondoInversion.Models;
 using Microsoft.IdentityModel.Tokens;
@@ -19,8 +18,6 @@ public class JwtAuthorizeAttribute : Attribute, IAsyncActionFilter
 
             var asEncryptService = httpContext.RequestServices.GetRequiredService<IEncryptionService>();
 
-
-            // 1. Intentar obtener el token del Header (para móvil)
             if (request.Headers.TryGetValue("Authorization", out var authorizationHeader))
             {
                 var authHeader = authorizationHeader.ToString();
@@ -30,13 +27,11 @@ public class JwtAuthorizeAttribute : Attribute, IAsyncActionFilter
                 }
             }
 
-            // 2. Si no hay token en header, intentar obtener de Cookie (para web)
             if (string.IsNullOrEmpty(token) && request.Cookies.TryGetValue("accessToken", out var cookieToken))
             {
                 token = cookieToken;
             }
 
-            // 3. Validar que se obtuvo un token
             if (string.IsNullOrEmpty(token))
             {
                 context.Result = new UnauthorizedObjectResult(new
@@ -47,10 +42,8 @@ public class JwtAuthorizeAttribute : Attribute, IAsyncActionFilter
                 return;
             }
 
-            // 3.5  Desencriptar token 
             token = await asEncryptService.DecryptAsync(token);
 
-            // 4. Verificar que no sea un refresh token
             if (IsRefreshToken(token))
             {
                 context.Result = new UnauthorizedObjectResult(new
@@ -61,7 +54,6 @@ public class JwtAuthorizeAttribute : Attribute, IAsyncActionFilter
                 return;
             }
 
-            // 5. Validar token
             var authService = httpContext.RequestServices.GetRequiredService<IAuthService>();
             var user = await authService.ValidateToken(token);
 
@@ -76,7 +68,6 @@ public class JwtAuthorizeAttribute : Attribute, IAsyncActionFilter
                 return;
             }
 
-            // 6. Verificar si el usuario está activo
             if (!IsUserActive(user))
             {
                 context.Result = new ObjectResult(new
@@ -99,8 +90,6 @@ public class JwtAuthorizeAttribute : Attribute, IAsyncActionFilter
             var principal = new ClaimsPrincipal(identity);
 
             httpContext.User = principal;
-
-            // 7. Agregar información al contexto
             httpContext.Items["User"] = user;
             httpContext.Items["UserId"] = user.id;
             httpContext.Items["UserEmail"] = user.correo;
@@ -113,7 +102,6 @@ public class JwtAuthorizeAttribute : Attribute, IAsyncActionFilter
         }
         catch (SecurityTokenExpiredException ex)
         {
-            // Token expirado - sugerir refresh
             context.Result = new ObjectResult(new
             {
                 message = "Token expirado",
@@ -124,7 +112,6 @@ public class JwtAuthorizeAttribute : Attribute, IAsyncActionFilter
         }
         catch (SecurityTokenException ex)
         {
-            // Error específico de token
             context.Result = new UnauthorizedObjectResult(new
             {
                 message = "Token de seguridad inválido",
@@ -133,7 +120,6 @@ public class JwtAuthorizeAttribute : Attribute, IAsyncActionFilter
         }
         catch (Exception ex)
         {
-            // Log the exception
             var logger = context.HttpContext.RequestServices.GetService<ILogger<JwtAuthorizeAttribute>>();
             logger?.LogError(ex, "Error en autorización JWT");
 
@@ -168,18 +154,11 @@ public class JwtAuthorizeAttribute : Attribute, IAsyncActionFilter
 
     private bool IsUserActive(user user)
     {
-        // Implementa tu lógica de verificación de usuario activo
-        // Por ejemplo:
-        // return user.Estado == "Activo";
-        // return user.Activo == true;
-
-        // Por ahora, asumimos que todos los usuarios están activos
         return true;
     }
 
     private string GetTokenSource(HttpRequest request, string token)
     {
-        // Determinar la fuente del token para logging/debugging
         if (request.Headers.TryGetValue("Authorization", out var authHeader) &&
             authHeader.ToString().Contains(token))
         {
@@ -207,7 +186,6 @@ public class JwtOptionalAuthorizeAttribute : Attribute, IAsyncActionFilter
             var httpContext = context.HttpContext;
             var request = httpContext.Request;
 
-            // Intentar obtener token de header
             if (request.Headers.TryGetValue("Authorization", out var authorizationHeader))
             {
                 var authHeader = authorizationHeader.ToString();
@@ -217,13 +195,11 @@ public class JwtOptionalAuthorizeAttribute : Attribute, IAsyncActionFilter
                 }
             }
 
-            // Intentar obtener token de cookie
             if (string.IsNullOrEmpty(token) && request.Cookies.TryGetValue("accessToken", out var cookieToken))
             {
                 token = cookieToken;
             }
 
-            // Si hay token, validarlo
             if (!string.IsNullOrEmpty(token) && !IsRefreshToken(token))
             {
                 var authService = httpContext.RequestServices.GetRequiredService<IAuthService>();
@@ -248,7 +224,6 @@ public class JwtOptionalAuthorizeAttribute : Attribute, IAsyncActionFilter
         }
         catch (Exception ex)
         {
-            // En modo opcional, no bloqueamos la request por errores de token
             var logger = context.HttpContext.RequestServices.GetService<ILogger<JwtOptionalAuthorizeAttribute>>();
             logger?.LogError(ex, "Error en autorización JWT opcional");
 
@@ -279,7 +254,7 @@ public class JwtOptionalAuthorizeAttribute : Attribute, IAsyncActionFilter
 
     private bool IsUserActive(user user)
     {
-        return true; // Implementa tu lógica
+        return true; 
     }
 
     private string GetTokenSource(HttpRequest request, string token)

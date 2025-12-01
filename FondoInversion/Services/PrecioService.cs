@@ -72,7 +72,6 @@ public class PrecioService
         }
         catch (Exception ex)
         {
-            // Log del error
             Console.WriteLine($"Error al guardar los precios: {ex.Message}");
             return false;
         }
@@ -106,24 +105,19 @@ public class PrecioService
             HasHeaderRecord = true,
             MissingFieldFound = null,
             BadDataFound = null
-            // Eliminamos ShouldSkipRecord ya que no funciona como esperábamos
         };
 
         using (var reader = new StreamReader(stream))
 
         using (var csv = new CsvReader(reader, config))
         {
-            // Configurar el mapeo
             csv.Context.RegisterClassMap<PrecioMap>();
-
-            // Leer todos los registros y filtrar después
             var records = csv.GetRecords<PrecioCsv>();
 
             foreach (var record in records)
             {
                 try
                 {
-                    // Validar y limpiar cada registro individualmente
                     if (EsRegistroValido(record))
                     {
                         precios.Add(new precio
@@ -135,7 +129,6 @@ public class PrecioService
                 }
                 catch (Exception ex)
                 {
-                    // Opcional: registrar el error pero continuar procesando
                     Console.WriteLine($"Error procesando registro: {ex.Message}");
                     continue;
                 }
@@ -144,30 +137,20 @@ public class PrecioService
 
         return precios;
     }
-
-    // Método auxiliar para validar registros
     private bool EsRegistroValido(PrecioCsv record)
     {
         if (record == null) return false;
-
-        // Validar FechaPrecio
         if (string.IsNullOrWhiteSpace(record.FechaPrecio) ||
             record.FechaPrecio.Contains("#N/A") ||
             record.FechaPrecio.Contains("ERROR"))
             return false;
-
-        // Validar PrecioMxn
         if (string.IsNullOrWhiteSpace(record.PrecioMxn) ||
             record.PrecioMxn.Contains("#N/A") ||
             record.PrecioMxn.Contains("ERROR"))
             return false;
-
-        // Validar formato de fecha
         if (!DateTime.TryParseExact(record.FechaPrecio.Trim(), "dd/MM/yyyy",
             CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
             return false;
-
-        // Validar formato de precio
         if (!double.TryParse(record.PrecioMxn.Trim(), NumberStyles.Any,
             CultureInfo.InvariantCulture, out double precio) || precio < 0)
             return false;
@@ -194,6 +177,11 @@ public class PrecioService
         var preciosMensual = await _precioRepository.GetByLimitDescent(22);
 
         var movimientos = await _flujoService.GetFlujosByUserID(userId);
+
+        if (movimientos.Count() <= 0)
+        {
+            return result;
+        }
 
         var saldoUnidades = (decimal)movimientos.Sum(m => m.importe + m.comision);
 

@@ -1,4 +1,3 @@
-// Repositories/Repository.cs
 using FondoInversion.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;

@@ -1,21 +1,13 @@
-
-using CsvHelper;
-using CsvHelper.Configuration;
-using System.Globalization;
 using FondoInversion.Data;
 using FondoInversion.Models;
-using Humanizer;
-using System.Linq;
 
 public class CSVService : ICSVService
 {
-    private readonly AppDbContext _context;
     private readonly PrecioService _precioService;
     private readonly FlujoService _flujoService;
 
-    public CSVService(AppDbContext context, PrecioService precioService, FlujoService flujoService)
+    public CSVService(PrecioService precioService, FlujoService flujoService)
     {
-        _context = context;
         _precioService = precioService;
         _flujoService = flujoService;
     }

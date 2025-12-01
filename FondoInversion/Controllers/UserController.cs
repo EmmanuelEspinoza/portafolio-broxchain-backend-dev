@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Text.Json;
 using FondoInversion.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -8,19 +9,22 @@ using Microsoft.AspNetCore.Mvc;
 public class UsersController : ControllerBase
 {
     private readonly UserService _userService;
-    // private readonly ILogger<UsersController> _logger;
     private readonly EventLogService _eventLogService;
 
 
     public UsersController(UserService userService, EventLogService eventLogService
-    // ILogger<UsersController> logger
     )
     {
         _userService = userService;
         _eventLogService = eventLogService;
-        // _logger = logger;
     }
 
+
+    [EndpointSummary("Obtener listado de usuarios")]
+    [EndpointDescription("Servicio para obtener el listado de usuarios")]
+    [ProducesResponseType<IEnumerable<user>>(StatusCodes.Status200OK, "application/json")]
+    [ProducesResponseType<string>(StatusCodes.Status401Unauthorized, "application/json")]
+    [ProducesResponseType<string>(StatusCodes.Status500InternalServerError, "application/json")]
     [JwtAuthorize]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<user>>> GetUsers()
@@ -38,6 +42,12 @@ public class UsersController : ControllerBase
         }
     }
 
+
+    [EndpointSummary("Obtener usuario por ID")]
+    [EndpointDescription("Servicio para obtener un usuario por su ID")]
+    [ProducesResponseType<user>(StatusCodes.Status200OK, "application/json")]
+    [ProducesResponseType<string>(StatusCodes.Status401Unauthorized, "application/json")]
+    [ProducesResponseType<string>(StatusCodes.Status500InternalServerError, "application/json")]
     [JwtAuthorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<user>> GetUser(int id)
@@ -60,9 +70,16 @@ public class UsersController : ControllerBase
     }
 
     // POST: api/Users
+    
+    [EndpointSummary("Guardar nuevo usuario")]
+    [EndpointDescription("Servicio para guardar un nuevo usuario")]
+    [ProducesResponseType<user>(StatusCodes.Status201Created, "application/json")]
+    [ProducesResponseType<string>(StatusCodes.Status401Unauthorized, "application/json")]
+    [ProducesResponseType<string>(StatusCodes.Status500InternalServerError, "application/json")]
     [JwtAuthorize]
     [HttpPost]
-    public async Task<ActionResult<user>> PostUser(CreateUserDto createUser)
+    public async Task<ActionResult<user>> PostUser(
+        [Description("Modelo para crear un nuevo usuario")]CreateUserDto createUser)
     {
         try
         {
@@ -77,10 +94,17 @@ public class UsersController : ControllerBase
         }
     }
 
-    // PUT: api/Users/5
+
+    [EndpointSummary("Actualizar usuario usuario")]
+    [EndpointDescription("Servicio para actualizar un usuario")]
+    [ProducesResponseType<string>(StatusCodes.Status204NoContent, "application/json")]
+    [ProducesResponseType<string>(StatusCodes.Status401Unauthorized, "application/json")]
+    [ProducesResponseType<string>(StatusCodes.Status500InternalServerError, "application/json")]
     [JwtAuthorize]
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutUser(int id, EditUserDto userUpdate)
+    public async Task<IActionResult> PutUser(
+        [Description("Id del suario a actualizar")]int id, 
+        [Description("Modelo del usuario a editar ")]EditUserDto userUpdate)
     {
         try
         {

@@ -77,17 +77,13 @@ public class FlujoService
         using (var reader = new StreamReader(stream))
         using (var csv = new CsvReader(reader, config))
         {
-            // Configurar el mapeo
             csv.Context.RegisterClassMap<FlujoMap>();
-
-            // Leer todos los registros y filtrar después
             var records = csv.GetRecords<FlujoCsv>();
 
             foreach (var record in records)
             {
                 try
                 {
-                    // Validar y limpiar cada registro individualmente
                     if (EsRegistroValido(record))
                     {
                         flujos.Add(new flujo
@@ -102,7 +98,6 @@ public class FlujoService
                 }
                 catch (Exception ex)
                 {
-                    // Opcional: registrar el error pero continuar procesando
                     Console.WriteLine($"Error procesando registro: {ex.Message}");
                     continue;
                 }
@@ -112,53 +107,35 @@ public class FlujoService
         return flujos;
     }
 
-    // Método auxiliar para validar registros
     private bool EsRegistroValido(FlujoCsv record)
     {
         if (record == null) return false;
-
-        // Validar DiaMovimiento
         if (string.IsNullOrWhiteSpace(record.DiaMovimiento) ||
             record.DiaMovimiento.Contains("#N/A") ||
             record.DiaMovimiento.Contains("ERROR"))
             return false;
-
-        // Validar Importe
         if (string.IsNullOrWhiteSpace(record.Importe) ||
             record.Importe.Contains("#N/A") ||
             record.Importe.Contains("ERROR"))
             return false;
-
-        // Validar Comision
         if (string.IsNullOrWhiteSpace(record.Comision) ||
             record.Comision.Contains("#N/A") ||
             record.Comision.Contains("ERROR"))
             return false;
-
-        // Validar InversionistaId
         if (string.IsNullOrWhiteSpace(record.InversionistaId) ||
             record.InversionistaId.Contains("#N/A") ||
             record.InversionistaId.Contains("ERROR"))
             return false;
-
-        // Validar Id
         if (string.IsNullOrWhiteSpace(record.Id) ||
             record.Id.Contains("#N/A") ||
             record.Id.Contains("ERROR"))
             return false;
-
-        // Validar formato de fecha
         if (!DateTime.TryParseExact(record.DiaMovimiento.Trim(), "dd/MM/yyyy",
             CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
             return false;
-
-        // Validar formato de precio
         if (!double.TryParse(record.Importe.Trim(), NumberStyles.Any,
             CultureInfo.InvariantCulture, out double Importe))
             return false;
-
-
-        // Validar formato de precio
         if (!double.TryParse(record.Comision.Trim(), NumberStyles.Any,
             CultureInfo.InvariantCulture, out double Comision))
             return false;
@@ -179,7 +156,6 @@ public class FlujoService
         }
         catch (Exception ex)
         {
-            // Log del error
             Console.WriteLine($"Error al guardar los flujos: {ex.Message}");
             return false;
         }

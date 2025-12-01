@@ -22,7 +22,7 @@ public class EditPrecioDto
     [Required(ErrorMessage = "El precio es obligatorio")]
     public double PrecioMxn { get; set; }
 
-    public bool? IsActive { get; set; } // Para activar/desactivar usuario
+    public bool? IsActive { get; set; }
 }
 
 public class GetSaldoDto

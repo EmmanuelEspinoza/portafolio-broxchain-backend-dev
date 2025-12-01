@@ -87,7 +87,6 @@ public class PrecioRepository : BaseRepository<precio>, IPrecioRepository
 
             if ((flujo?.comision ?? 0) != 0)
             {
-                // Aqui agregar  resultado de comision
                 tipoMov = "Comisión";
                 resultado = new FlujoPrecio
                 {

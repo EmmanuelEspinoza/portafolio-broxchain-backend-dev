@@ -9,7 +9,6 @@ public class UserRepository : BaseRepository<user>, IUserRepository
     public async Task<user> GetUserByEmailAsync(string email)
     {
         return await _dbSet.FirstOrDefaultAsync(u => u.correo == email) ?? new user();
-        // return user ?? throw new InvalidOperationException($"Usuario con email {email} no encontrado");
     }
     
 }

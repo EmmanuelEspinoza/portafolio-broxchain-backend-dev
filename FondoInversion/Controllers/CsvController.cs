@@ -1,4 +1,4 @@
-using System.Text.Json;
+using System.ComponentModel;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -8,30 +8,34 @@ public class CSVController : ControllerBase
     private readonly ICSVService _csvService;
     private readonly PrecioService _precioService;
     private readonly FlujoService _flujoService;
-    // private readonly ILogger<CSVController> _logger;
     private readonly EventLogService _eventLogService;
 
     public CSVController(ICSVService csvService, PrecioService precioService, FlujoService flujoService, EventLogService eventLogService
-    // ILogger<CSVController> logger, 
     )
     {
         _csvService = csvService;
-        // _logger = logger;
         _precioService = precioService;
         _flujoService = flujoService;
         _eventLogService = eventLogService;
     }
 
+    
+    [EndpointSummary("Subir precios")]
+    [EndpointDescription("Servicio para subir los precios desde un csv en el cual debe estructurarse de la siguiente manera: 'FECHA(formato dd/MM/YYYY), PRECIO(decimal)'")]
+    [ProducesResponseType<string>(StatusCodes.Status200OK, "application/json")]
+    [ProducesResponseType<string>(StatusCodes.Status401Unauthorized, "application/json")]
+    [ProducesResponseType<string>(StatusCodes.Status400BadRequest, "application/json")]
+    [ProducesResponseType<string>(StatusCodes.Status500InternalServerError, "application/json")]
     [JwtAuthorize] 
     [HttpPost("uploadPrecios")]
-    public async Task<IActionResult> UploadCSV(IFormFile file)
+    public async Task<IActionResult> UploadCSV(
+        [Description("Archivo CSV con el listado de precios a subir ")]IFormFile file)
     {
         if (file == null || file.Length == 0)
         {
             return BadRequest("No se ha enviado ningún archivo");
         }
 
-        // Validar que sea un archivo CSV
         if (Path.GetExtension(file.FileName).ToLower() != ".csv")
         {
             return BadRequest("Solo se permiten archivos CSV");
@@ -41,7 +45,6 @@ public class CSVController : ControllerBase
         {
             using (var stream = file.OpenReadStream())
             {
-                // Procesar el CSV
                 var resultado = await _csvService.ProcesarPrecioCSV(stream);
 
                 if (resultado.Count == 0)
@@ -69,6 +72,13 @@ public class CSVController : ControllerBase
         }
     }
 
+
+    [EndpointSummary("Subir flujos")]
+    [EndpointDescription("Servicio para subir los flujos de los movimientos de los usuarios, usa un csv con la siguiente estructura: 'ID(int), FECHA(formato dd/MM/YYYY), INVERSIONISTA(id del inversionista), FLUJO(movimiento en unidades del fondo 'decimal'), COMISION(movimiento en unidades del fondo que representa la comisión)'")]
+    [ProducesResponseType<string>(StatusCodes.Status200OK, "application/json")]
+    [ProducesResponseType<string>(StatusCodes.Status401Unauthorized, "application/json")]
+    [ProducesResponseType<string>(StatusCodes.Status400BadRequest, "application/json")]
+    [ProducesResponseType<string>(StatusCodes.Status500InternalServerError, "application/json")]
     [JwtAuthorize] 
     [HttpPost("uploadFlujos")]
     public async Task<IActionResult> UploadFlujoCSV(IFormFile file)
@@ -77,8 +87,6 @@ public class CSVController : ControllerBase
         {
             return BadRequest("No se ha enviado ningún archivo");
         }
-
-        // Validar que sea un archivo CSV
         if (Path.GetExtension(file.FileName).ToLower() != ".csv")
         {
             return BadRequest("Solo se permiten archivos CSV");
@@ -88,7 +96,6 @@ public class CSVController : ControllerBase
         {
             using (var stream = file.OpenReadStream())
             {
-                // Procesar el CSV
                 var resultado = await _csvService.ProcesaFlujoCSV(stream);
 
                 if (resultado.Count == 0)

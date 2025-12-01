@@ -27,8 +27,6 @@ public class TokenService
     {
         try
         {
-
-            // Desencryptar el refreshtoken
             refreshToken = await _aesEncryptionService.DecryptAsync(refreshToken);
 
             var expires = DateTime.UtcNow.AddDays(7);
@@ -44,7 +42,6 @@ public class TokenService
                 throw new SecurityTokenException("Refresh token revocado");
             }
 
-            // Validar el refresh token y obtener el usuario
             var user = await ValidateRefreshToken(refreshToken);
 
             if (user == null)
@@ -53,12 +50,9 @@ public class TokenService
                 throw new SecurityTokenException("Refresh token inválido o expirado");
             }
 
-            // Generar nuevos tokens
             var newAccessToken = GenerateAccessToken(user);
             var newRefreshToken = GenerateRefreshToken(user);
 
-            // En producción, actualizar el refresh token en la base de datos
-            // await _userRepository.UpdateRefreshTokenAsync(user.Id, refreshToken, newRefreshToken);
             var userResp = new userResponse
             {
                 name = user.name,
@@ -102,8 +96,6 @@ public class TokenService
             }, out SecurityToken validatedToken);
 
             var jwtToken = (JwtSecurityToken)validatedToken;
-
-            // Verificar que NO sea un refresh token
             var tokenType = jwtToken.Claims.FirstOrDefault(x => x.Type == "tokenType")?.Value;
             if (tokenType == "refresh")
             {
@@ -116,7 +108,7 @@ public class TokenService
         catch (SecurityTokenExpiredException)
         {
             _logger.LogWarning("Token expirado");
-            throw; // Relanzar para que el filter lo capture
+            throw; 
         }
         catch (SecurityTokenException ex)
         {
@@ -134,7 +126,6 @@ public class TokenService
     {
         try
         {
-            // Validar el token primero
             var user = await ValidateRefreshToken(refreshToken);
             
             var userRefreshToken = await _tokenRepository.GetDataByRefreshToken(refreshToken);
@@ -142,7 +133,6 @@ public class TokenService
             {
                 var expires = DateTime.UtcNow;
                 await UpdateRefreshToken(refreshToken, userRefreshToken, expires, 0);
-                // En producción: await _userRepository.RevokeRefreshTokenAsync(user.Id, refreshToken);
                 _logger.LogInformation($"Refresh token revocado para usuario: {user.correo}");
                 return true;
             }

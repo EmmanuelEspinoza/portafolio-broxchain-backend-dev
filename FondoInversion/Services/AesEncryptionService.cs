@@ -2,17 +2,14 @@ using System.Security.Cryptography;
 
 public class AesEncryptionService : IEncryptionService
 {
-    // private readonly IKeyManagementService _keyManagementService;
     private readonly int _keySize;
     private readonly int _blockSize;
     private readonly IConfiguration _configuration;
 
     public AesEncryptionService(
         IConfiguration configuration,
-        // IKeyManagementService keyManagementService, 
         int keySize = 256, int blockSize = 128)
     {
-        // _keyManagementService = keyManagementService;
         _keySize = keySize;
         _blockSize = blockSize;
         _configuration = configuration;
@@ -20,7 +17,6 @@ public class AesEncryptionService : IEncryptionService
 
     public async Task<string> EncryptAsync(string plainText)
     {
-        // var key = await _keyManagementService.GetEncryptionKeyAsync();
         var keyBase64 = _configuration["SecretAes"] ?? "XWs1V2cnRzVmQztvQVJiMw==";
         byte[] key = Convert.FromBase64String(keyBase64);
         
@@ -53,7 +49,6 @@ public class AesEncryptionService : IEncryptionService
 
     public async Task<string> DecryptAsync(string cipherText)
     {
-        // var key = await _keyManagementService.GetEncryptionKeyAsync();
         var fullCipher = Convert.FromBase64String(cipherText);
         
         var keyBase64 = _configuration["SecretAes"] ?? "XWs1V2cnRzVmQztvQVJiMw==";

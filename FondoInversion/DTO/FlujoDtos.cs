@@ -14,12 +14,6 @@ public class CreateFlujoDto
 
     [Required(ErrorMessage = "La comisión es obligatorio")]
     public double Comision { get; set; }
-
-    // [Required(ErrorMessage = "El tipo de movimiento es obligatorio")]
-    // public string Tipo { get; set; }
-
-    // [Required(ErrorMessage = "El estatus de la transacción es obligatorio")]
-    // public string Estatus { get; set; }
 }
 
 
@@ -38,12 +32,6 @@ public class EditFlujoDto
 
     [Required(ErrorMessage = "La comisión es obligatorio")]
     public double Comision { get; set; }
-
-    // [Required(ErrorMessage = "El tipo de movimiento es obligatorio")]
-    // public string Tipo { get; set; }
-
-    // [Required(ErrorMessage = "El estatus de la transacción es obligatorio")]
-    // public required string Estatus { get; set; }
 }
 
 public class FlujoPrecio

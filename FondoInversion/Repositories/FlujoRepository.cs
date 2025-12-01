@@ -8,7 +8,6 @@ public class FlujoRepository : BaseRepository<flujo>, IFlujoRepository
 
     public async Task BulkUpsertAsync(List<flujo> flujos)
     {
-        //filtramos primero los que ya estan hechos
         await AddRangeAsync(flujos);
         await SaveAsync();
     }

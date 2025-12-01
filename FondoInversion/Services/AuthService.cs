@@ -1,20 +1,14 @@
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using FondoInversion.Models;
 
 public class AuthService : IAuthService
 {
     private readonly IUserRepository _userRepository;
-    private readonly IConfiguration _configuration;
     private readonly TokenService _tokenService;
     private readonly ILogger<AuthService> _logger;
 
     public AuthService(IUserRepository userRepository, IConfiguration configuration, ILogger<AuthService> logger, TokenService tokenService)
     {
         _userRepository = userRepository;
-        _configuration = configuration;
         _tokenService = tokenService;
         _logger = logger;
     }

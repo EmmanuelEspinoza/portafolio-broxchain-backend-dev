@@ -30,7 +30,7 @@ public class CreateUserDto
 
 public class EditUserDto
 {
-    public int Id { get; set; } // Necesario para identificar el usuario a editar
+    public int Id { get; set; }
 
     [StringLength(500, ErrorMessage = "El nombre no puede exceder 500 caracteres")]
     public string? Name { get; set; }

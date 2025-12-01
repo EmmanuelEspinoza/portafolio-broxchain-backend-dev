@@ -4,13 +4,10 @@ public class EventLogService
 {
     private readonly IEventLogRepository _eventLogRepository;
     private readonly IConfiguration _configuration;
-    private readonly ILogger<EventLogService> _logger;
-
     public EventLogService(IConfiguration configuration, IEventLogRepository eventLogRepository, ILogger<EventLogService> logger)
     {
         _eventLogRepository = eventLogRepository;
         _configuration = configuration;
-        _logger = logger;
     }
 
 

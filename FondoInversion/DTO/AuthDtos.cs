@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using FondoInversion.Models;
 
 public class SSOUserData
 {
@@ -9,7 +8,6 @@ public class SSOUserData
     
     [Required(ErrorMessage = "El password es obligatorio")]
     public string password { get; set; }
-    // Agrega otros campos que retorne tu SSO
 }
 
 public class AuthResponse

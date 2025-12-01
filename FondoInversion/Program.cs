@@ -4,8 +4,12 @@ using FondoInversion.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.OpenApi;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 // Agregar DbContext con SQL Server
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -63,23 +67,38 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
         policy =>
         {
-            policy.WithOrigins(["http://localhost:4200", "https://localhost:7169", "https://fondo-inversion-front-991595227055.northamerica-south1.run.app"])
+            policy.WithOrigins(["http://localhost:4200", "http://localhost:5206", "https://fondo-inversion-front-991595227055.northamerica-south1.run.app"])
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
         });
+
+    
 });
 
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddJsonOptions( x=> x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles) ;
+builder.Services.AddOpenApi();
+
 
 var app = builder.Build();
 
+//Habilirr swagger solo informativo para desarrollo ???
+// if (app.Environment.IsDevelopment())
+// {
+    app.MapOpenApi();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", "Mi API v1");
+        options.RoutePrefix = "swagger"; 
+        options.DocumentTitle = "Mi API Documentation";
+        options.EnablePersistAuthorization();
+    });
+// }
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 

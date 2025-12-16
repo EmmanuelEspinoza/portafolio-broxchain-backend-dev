@@ -67,7 +67,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
         policy =>
         {
-            policy.WithOrigins(["http://localhost:4200", "http://localhost:5206", "https://fondo-inversion-front-991595227055.northamerica-south1.run.app"])
+            policy.WithOrigins(["http://localhost:4200", "http://localhost:5206", "https://fondo-inversion-web-991595227055.us-central1.run.app"])
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();

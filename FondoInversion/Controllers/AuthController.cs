@@ -206,10 +206,29 @@ public class AuthController : ControllerBase
     [ProducesResponseType<AnyType>(StatusCodes.Status400BadRequest, "application/json")]
     [HttpPost("logout")]
     public async Task<IActionResult> Logout(
-        [Description("Refresh token a invalidar")][FromBody] RefreshTokenRequest request)
+        [Description("Refresh token a invalidar")][FromBody] RefreshTokenRequest request, [FromHeader] string authorization = null)
     {
         try
         {
+            string refreshToken;
+
+            if (!string.IsNullOrEmpty(authorization) && authorization.StartsWith("Bearer "))
+            {
+                refreshToken = authorization.Replace("Bearer ", "");
+            }
+            else if (Request.Cookies.ContainsKey("refreshToken"))
+            {
+                refreshToken = Request.Cookies["refreshToken"];
+            }
+            else if (request?.RefreshToken != null)
+            {
+                refreshToken = request.RefreshToken;
+            }
+            else
+            {
+                return Unauthorized(new { message = "Refresh token no disponible" });
+            }
+            request.RefreshToken = refreshToken;
             ClearTokenCookies();
             return await RevokeToken(request);
         }
@@ -253,6 +272,10 @@ public class AuthController : ControllerBase
     private bool IsWebRequest(HttpRequest request)
     {
         var userAgent = request.Headers["User-Agent"].ToString();
+        if (userAgent.Contains("Google-Apps-Script"))
+        {
+            return false;
+        }
         return userAgent.Contains("Mozilla") ||
                 userAgent.Contains("Chrome") ||
                 userAgent.Contains("Safari");

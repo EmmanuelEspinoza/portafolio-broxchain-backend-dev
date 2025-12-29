@@ -3,15 +3,15 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [
         'build',
-        '-t', 'us-central1-docker.pkg.dev/pruebasbroxchain/broxchain/cloud-run-source-deploy/fondo-inversion-i:$BUILD_ID',
-        '-t', 'us-central1-docker.pkg.dev/pruebasbroxchain/broxchain/cloud-run-source-deploy/fondo-inversion-i:latest',
+        '-t', 'us-central1-docker.pkg.dev/broxel1/broxchain/cloud-run-source-deploy/fondo-inversion-i:$BUILD_ID',
+        '-t', 'us-central1-docker.pkg.dev/broxel1/broxchain/cloud-run-source-deploy/fondo-inversion-i:latest',
         '.'
     ]
     
   # Subir la imagen a Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/pruebasbroxchain/broxchain/cloud-run-source-deploy/fondo-inversion-i:$BUILD_ID']
+    args: ['push', 'us-central1-docker.pkg.dev/broxel1/broxchain/cloud-run-source-deploy/fondo-inversion-i:$BUILD_ID']
 
 images:
-  - 'us-central1-docker.pkg.dev/pruebasbroxchain/broxchain/cloud-run-source-deploy/fondo-inversion-i:$BUILD_ID'
-  - 'us-central1-docker.pkg.dev/pruebasbroxchain/broxchain/cloud-run-source-deploy/fondo-inversion-i:latest'
+  - 'us-central1-docker.pkg.dev/broxel1/broxchain/cloud-run-source-deploy/fondo-inversion-i:$BUILD_ID'
+  - 'us-central1-docker.pkg.dev/broxel1/broxchain/cloud-run-source-deploy/fondo-inversion-i:latest'

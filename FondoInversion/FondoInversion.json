@@ -11,7 +11,7 @@
           "Auth"
         ],
         "summary": "Endpoint de logeo",
-        "description": "Servicio que válida si el usuario existe, al comprobarlo genera los tokens para las demás operaciones, para web genera cookies con los tokens y para móviles se envía en la información del JSON de respuesta",
+        "description": "Servicio que válida si el usuario existe, al comprobarlo genera los tokens. En DEBUG devuelve JSON completo; en RELEASE usa cookies estrictas para web.",
         "parameters": [
           {
             "name": "useCookies",
@@ -84,7 +84,7 @@
           "Auth"
         ],
         "summary": "Actualizar token de acceso",
-        "description": "Servicio que genera un nuevo accesstoken a partir de un refresh token, también este servicio lo valida y en caso de no ser correcto no lo regenera.",
+        "description": "Servicio que genera un nuevo accesstoken a partir de un refresh token.",
         "requestBody": {
           "description": "Refresh token del cual se ocupa generar un access token",
           "content": {

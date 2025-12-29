@@ -16,7 +16,7 @@
             "host": "example.com",
             "token": "{{$shared prodToken}}",
             "secretKey": "prodSecret",
-            "baseUrl": "https://fondo-inversion-service-991595227055.us-central1.run.app/api"
+            "baseUrl": "https://fondo-inversion-service-387791937810.us-central1.run.app/api"
         }
     }
 }

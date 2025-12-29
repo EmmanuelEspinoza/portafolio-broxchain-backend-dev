@@ -3,7 +3,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Any;
-
+using FondoInversion.DTO; // Asegúrate de que este namespace coincida con tus DTOs
 
 [ApiController]
 [Route("api/[controller]")]
@@ -21,7 +21,7 @@ public class AuthController : ControllerBase
     }
 
     [EndpointSummary("Endpoint de logeo")]
-    [EndpointDescription("Servicio que válida si el usuario existe, al comprobarlo genera los tokens para las demás operaciones, para web genera cookies con los tokens y para móviles se envía en la información del JSON de respuesta")]
+    [EndpointDescription("Servicio que válida si el usuario existe, al comprobarlo genera los tokens. En DEBUG devuelve JSON completo; en RELEASE usa cookies estrictas para web.")]
     [ProducesResponseType<AuthResponse>(StatusCodes.Status200OK, "application/json")]
     [ProducesResponseType<AnyType>(StatusCodes.Status401Unauthorized, "application/json")]
     [ProducesResponseType<AnyType>(StatusCodes.Status400BadRequest, "application/json")]
@@ -38,17 +38,38 @@ public class AuthController : ControllerBase
             var ecRefrhesrToken = await _aesEncryptionService.EncryptAsync(authResponse.RefreshToken);
             var isWebReq =  IsWebRequest(Request);
 
+            // 1. Configuración de Cookies (Común para ambos entornos)
             if (useCookies || isWebReq)
             {
                 SetTokenCookies(ecAccesToken, ecRefrhesrToken);
+            }
+
+            // 2. Respuesta del Endpoint (Diferenciada por entorno)
+#if DEBUG
+            // MODO DESARROLLO (Local): 
+            // Devolvemos SIEMPRE los tokens en el JSON para que funcionen Swagger y Postman.
+            return Ok(new AuthResponse
+            {
+                AccessToken = ecAccesToken,
+                RefreshToken = ecRefrhesrToken,
+                User = authResponse.User,
+                ExpiresAt = authResponse.ExpiresAt
+            });
+#else
+            // MODO PRODUCCIÓN (Nube): 
+            // Respetamos la arquitectura estricta. Si es Web, tokens ocultos en Cookie.
+            if (useCookies || isWebReq)
+            {
                 return Ok(new AuthResponse
                 {
+                    // No devolvemos AccessToken ni RefreshToken en el cuerpo (van en cookie)
                     User = authResponse.User,
                     ExpiresAt = authResponse.ExpiresAt
                 });
             }
             else
             {
+                // Para móviles o servicios externos, devolvemos el JSON completo
                 return Ok(new AuthResponse
                 {
                     AccessToken = ecAccesToken,
@@ -57,6 +78,7 @@ public class AuthController : ControllerBase
                     ExpiresAt = authResponse.ExpiresAt
                 });
             }
+#endif
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -74,7 +96,7 @@ public class AuthController : ControllerBase
 
 
     [EndpointSummary("Actualizar token de acceso")]
-    [EndpointDescription("Servicio que genera un nuevo accesstoken a partir de un refresh token, también este servicio lo valida y en caso de no ser correcto no lo regenera.")]
+    [EndpointDescription("Servicio que genera un nuevo accesstoken a partir de un refresh token.")]
     [ProducesResponseType<AuthResponse>(StatusCodes.Status200OK, "application/json")]
     [ProducesResponseType<AnyType>(StatusCodes.Status401Unauthorized, "application/json")]
     [ProducesResponseType<AnyType>(StatusCodes.Status400BadRequest, "application/json")]
@@ -105,9 +127,24 @@ public class AuthController : ControllerBase
 
             var authResponse = await _authService.RefreshToken(refreshToken);
 
-            if (IsWebRequest(Request) && Request.Cookies.ContainsKey("refreshToken"))
+            if (IsWebRequest(Request))
             {
                 SetTokenCookies(authResponse.AccessToken, authResponse.RefreshToken);
+            }
+
+#if DEBUG
+            // MODO DESARROLLO: JSON Completo
+            return Ok(new AuthResponse
+            {
+                AccessToken = authResponse.AccessToken,
+                RefreshToken = authResponse.RefreshToken,
+                User = authResponse.User,
+                ExpiresAt = authResponse.ExpiresAt
+            });
+#else
+            // MODO PRODUCCIÓN: Seguridad estricta
+            if (IsWebRequest(Request))
+            {
                 return Ok(new AuthResponse
                 {
                     User = authResponse.User,
@@ -124,6 +161,7 @@ public class AuthController : ControllerBase
                     ExpiresAt = authResponse.ExpiresAt
                 });
             }
+#endif
         }
         catch (SecurityTokenException ex)
         {
@@ -135,7 +173,6 @@ public class AuthController : ControllerBase
         catch (Exception ex)
         {
             ClearTokenCookies();
-
             var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
             await _eventLogService.SaveEventLog(exception, ETipoMessage.Error, JsonSerializer.Serialize(request));
             return BadRequest(new { message = "Error durante la renovación del token" });
@@ -164,12 +201,10 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
-
             var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
             await _eventLogService.SaveEventLog(exception, ETipoMessage.Error, JsonSerializer.Serialize(request));
             return StatusCode(500, "ocurrio un error durante la validación del token");
         }
-
     }
 
 
@@ -192,7 +227,6 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
-
             var exception = ex.Message + " ---StackTrace--- " + ex.StackTrace;
             await _eventLogService.SaveEventLog(exception, ETipoMessage.Error, JsonSerializer.Serialize(request));
             return BadRequest(new { message = "error al revocar el token " });
@@ -280,6 +314,4 @@ public class AuthController : ControllerBase
                 userAgent.Contains("Chrome") ||
                 userAgent.Contains("Safari");
     }
-
 }
-

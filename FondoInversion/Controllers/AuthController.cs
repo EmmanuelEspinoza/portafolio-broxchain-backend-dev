@@ -2,7 +2,6 @@ using System.ComponentModel;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Any;
 using FondoInversion.DTO; // Asegúrate de que este namespace coincida con tus DTOs
 
 [ApiController]
@@ -23,8 +22,8 @@ public class AuthController : ControllerBase
     [EndpointSummary("Endpoint de logeo")]
     [EndpointDescription("Servicio que válida si el usuario existe, al comprobarlo genera los tokens. En DEBUG devuelve JSON completo; en RELEASE usa cookies estrictas para web.")]
     [ProducesResponseType<AuthResponse>(StatusCodes.Status200OK, "application/json")]
-    [ProducesResponseType<AnyType>(StatusCodes.Status401Unauthorized, "application/json")]
-    [ProducesResponseType<AnyType>(StatusCodes.Status400BadRequest, "application/json")]
+    [ProducesResponseType<object>(StatusCodes.Status401Unauthorized, "application/json")]
+    [ProducesResponseType<object>(StatusCodes.Status400BadRequest, "application/json")]
     [HttpPost("sso")]
     public async Task<IActionResult> SSOLogin(
         [Description("Modelo de datos para el login")][FromBody] SSOUserData ssoData, 
@@ -98,8 +97,8 @@ public class AuthController : ControllerBase
     [EndpointSummary("Actualizar token de acceso")]
     [EndpointDescription("Servicio que genera un nuevo accesstoken a partir de un refresh token.")]
     [ProducesResponseType<AuthResponse>(StatusCodes.Status200OK, "application/json")]
-    [ProducesResponseType<AnyType>(StatusCodes.Status401Unauthorized, "application/json")]
-    [ProducesResponseType<AnyType>(StatusCodes.Status400BadRequest, "application/json")]
+    [ProducesResponseType<object>(StatusCodes.Status401Unauthorized, "application/json")]
+    [ProducesResponseType<object>(StatusCodes.Status400BadRequest, "application/json")]
     [HttpPost("refresh")]
     public async Task<IActionResult> RefreshToken(
         [Description("Refresh token del cual se ocupa generar un access token")][FromBody] RefreshTokenRequest request, [FromHeader] string authorization = null)
@@ -183,8 +182,8 @@ public class AuthController : ControllerBase
     [EndpointSummary("Validar token de acceso")]
     [EndpointDescription("Servicio para validar si el access token sigue siendo válido.")]
     [ProducesResponseType<AuthResponse>(StatusCodes.Status200OK, "application/json")]
-    [ProducesResponseType<AnyType>(StatusCodes.Status401Unauthorized, "application/json")]
-    [ProducesResponseType<AnyType>(StatusCodes.Status400BadRequest, "application/json")]
+    [ProducesResponseType<object>(StatusCodes.Status401Unauthorized, "application/json")]
+    [ProducesResponseType<object>(StatusCodes.Status400BadRequest, "application/json")]
     [JwtAuthorize]
     [HttpPost("validate")]
     public async Task<IActionResult> Validate(
@@ -211,7 +210,7 @@ public class AuthController : ControllerBase
     [EndpointSummary("Revocar permisos del token")]
     [EndpointDescription("Servicio que sirve para marcar invalidar el refresh token .")]
     [ProducesResponseType<AuthResponse>(StatusCodes.Status200OK, "application/json")]
-    [ProducesResponseType<AnyType>(StatusCodes.Status400BadRequest, "application/json")]
+    [ProducesResponseType<object>(StatusCodes.Status400BadRequest, "application/json")]
     [HttpPost("revoke")]
     public async Task<IActionResult> RevokeToken(
         [Description("Token a invalidar")][FromBody] RefreshTokenRequest request)
@@ -237,7 +236,7 @@ public class AuthController : ControllerBase
     [EndpointSummary("Servicio de cierre de sesión.")]
     [EndpointDescription("Este servicio se dedica a limpiar las cookies generadas e invalida el refresh token.")]
     [ProducesResponseType<AuthResponse>(StatusCodes.Status200OK, "application/json")]
-    [ProducesResponseType<AnyType>(StatusCodes.Status400BadRequest, "application/json")]
+    [ProducesResponseType<object>(StatusCodes.Status400BadRequest, "application/json")]
     [HttpPost("logout")]
     public async Task<IActionResult> Logout(
         [Description("Refresh token a invalidar")][FromBody] RefreshTokenRequest request, [FromHeader] string authorization = null)

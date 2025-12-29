@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.OpenApi;
-using Microsoft.OpenApi.Models;
+using Scalar.AspNetCore;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -89,22 +89,13 @@ builder.Services.AddControllersWithViews()
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
 
-builder.Services.AddOpenApi(); // <--- ¡AGREGA ESTA LÍNEA AQUÍ!
+builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-//Habilirr swagger solo informativo para desarrollo ???
-// if (app.Environment.IsDevelopment())
-// {
-    app.MapOpenApi();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/openapi/v1.json", "Mi API v1");
-        options.RoutePrefix = "swagger"; 
-        options.DocumentTitle = "Mi API Documentation";
-        options.EnablePersistAuthorization();
-    });
-// }
+app.MapOpenApi();
+app.MapScalarApiReference();
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

@@ -2,7 +2,6 @@ using System.ComponentModel;
 using System.Text.Json;
 using FondoInversion.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Any;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -96,7 +95,7 @@ public class FlujosController : ControllerBase
     
     [EndpointSummary("Actualizar flujo")]
     [EndpointDescription("Servicio para actualizar los datos de un flujo por su ID")]
-    [ProducesResponseType<AnyType>(StatusCodes.Status204NoContent, "application/json")]
+    [ProducesResponseType<object>(StatusCodes.Status204NoContent, "application/json")]
     [ProducesResponseType<string>(StatusCodes.Status401Unauthorized, "application/json")]
     [ProducesResponseType<string>(StatusCodes.Status500InternalServerError, "application/json")]
     [JwtAuthorize] 

@@ -1,5 +1,5 @@
 steps:
-  # Construir la imagen
+  # Construir la imagen con .NET 10
   - name: 'gcr.io/cloud-builders/docker'
     args: [
         'build',

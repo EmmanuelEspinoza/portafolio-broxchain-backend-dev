@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using FondoInversion.Models;
 using Microsoft.IdentityModel.Tokens;
+using FondoInversion.DTO;
 
 public class TokenService
 {

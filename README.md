@@ -2,15 +2,13 @@
 Proyecto de desarrollo Broxel, Backend de Fondo de Inversión 
 
 ## 📖 Descripción
-Aquí explica con más detalle el propósito del proyecto.
-* ¿Qué problema resuelve?
-* ¿Es una aplicación de consola, una API, Web Forms o MVC?
-* ¿Es un proyecto final para una materia específica?
+Este proyecto consiste en una API REST desarrollada en .NET 9.0 bajo una arquitectura de capas (Repository Pattern). Su propósito es gestionar las operaciones de un Fondo de Inversión, incluyendo autenticación segura, manejo de flujos de dinero y auditoría de transacciones.
 
 ## 🚀 Tecnologías Utilizadas
 * **Lenguaje:** C#
 * **Framework:** .NET 9.0
-* **Base de Datos:** SQL Server (Compatible con SQL Server 2022)
+* **Base de Datos:** SQL Server (Compatible con SQL Server 2022 / Azure SQL / Google Cloud SQL)
+* **Infraestructura Cloud:** Google Cloud Platform (Cloud Run, Cloud SQL, Cloud Build).
 * **Librerías Principales:**
     * **Entity Framework Core:** Mapeo objeto-relacional (ORM).
     * **Google Cloud Storage:** Integración para almacenamiento de archivos en la nube.
@@ -18,139 +16,212 @@ Aquí explica con más detalle el propósito del proyecto.
     * **CsvHelper:** Procesamiento y lectura de archivos CSV.
     * **Newtonsoft.Json:** Manipulación de datos JSON.
     * **Swagger/OpenAPI:** Documentación automática de la API.
-* **Herramientas:** Visual Studio 2022, Docker, Google Cloud SDK.
-
+* **Herramientas:** Visual Studio 2022, Docker, Google Cloud SDK, DBeaver.
 
 ## 📋 Pre-requisitos
 Antes de ejecutar este proyecto, asegúrate de tener instalado:
 
-1.  **Visual Studio Code** (Versión 1.107 o superior).
-    * Extensión recomendada: [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit).
+1.  **Visual Studio Code** (Versión 1.107 o superior) con la extensión [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit).
 2.  **.NET SDK 9.0** (Requerido por el proyecto).
-3.  **Docker Desktop** (Obligatorio en macOS para ejecutar SQL Server).
+3.  **Google Cloud CLI** (Para la ejecución en entorno macOS/Híbrido y despliegues).
+4.  **Gestor de BD:** DBeaver (Recomendado) o SSMS.
 
+---
 
-## 🔧 Instalación y Configuración
+## 🔧 Instalación y Ejecución Local
 
-Sigue estos pasos secuenciales para levantar el proyecto en tu entorno local (macOS).
+Existen dos formas de ejecutar el proyecto localmente. Elige la que se adapte a tu sistema operativo.
 
-### 1. Clonar el Repositorio
-Abre tu terminal y descarga el código fuente:
+### Opción A: Vía Docker (Windows / Linux)
+Sigue estos pasos si deseas levantar una base de datos local efímera.
 
+1.  **Clonar el Repositorio**
+    ```bash
+    git clone [https://github.com/EmmanuelEspinoza/portafolio-broxchain-backend-dev.git](https://github.com/EmmanuelEspinoza/portafolio-broxchain-backend-dev.git)
+    cd portafolio-broxchain-backend-dev
+    ```
+2.  **Levantar SQL Server**
+    ```bash
+    docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=TuPasswordFuerte123!" \
+       -p 1433:1433 --name sql_server_local \
+       -d [mcr.microsoft.com/mssql/server:2022-latest](https://mcr.microsoft.com/mssql/server:2022-latest)
+    ```
+3.  **Configurar Conexión**
+    Asegúrate de que tu `appsettings.Development.json` apunte a `localhost,1433` con el usuario `sa`.
+
+### Opción B: Entorno macOS / Híbrido (Cloud SQL Proxy)
+[cite_start]Solución para ejecutar el proyecto en macOS (chips M1/M2/M3). La base de datos del proyecto es SQL Server sin embargo no existe este software de forma nativa dentro de macOS, existen dos soluciones a este problema. La primera es utilizar docker para correr la base de datos sobre un contenedor pero dadas las limitaciones institucionales esto no es posible. La segunda es utilizar un una instancia de Cloud SQL de GCP que aloje una base de datos SQL Server. Si este es el caso ve a la seccion de despligue e infraestructura e implementa los pasos para crear la base datos. Una vez que hayas creado la base datos regresa a este punto y continua...
+
+#### 1. Preparar el Proxy
+1.  [cite_start]Descargar el binario del proxy (v2 para Mac ARM64)[cite: 84]:
+    ```bash
+    curl -o cloud-sql-proxy [https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.11.0/cloud-sql-proxy.darwin.arm64](https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.11.0/cloud-sql-proxy.darwin.arm64)
+    ```
+2.  Dar permisos de ejecución[cite: 87]:
+    ```bash
+    chmod +x cloud-sql-proxy
+    ```
+
+#### 2. Configurar Autenticación (Service Account)
+[cite_start]Debido a restricciones con cuentas institucionales, se debe usar una Cuenta de Servicio[cite: 89, 90]:
+1.  [cite_start]En GCP Console, crear una Service Account llamada `sql-proxy-local`[cite: 95].
+2.  [cite_start]Asignar el rol: **Cloud SQL Client**[cite: 96].
+3.  [cite_start]Generar una clave JSON y descargarla como `key.json` en la raíz del proyecto [cite: 101-103].
+
+#### 3. Ejecutar el Túnel
+[cite_start]Ejecuta el proxy apuntando a la instancia de desarrollo (reemplaza con tu `Connection Name`)[cite: 108]:
 ```bash
-git clone [https://github.com/EmmanuelEspinoza/portafolio-broxchain-backend-dev.git](https://github.com/EmmanuelEspinoza/portafolio-broxchain-backend-dev.git)
-cd portafolio-broxchain-backend-dev
+./cloud-sql-proxy TU_PROYECTO:us-central1:brox-sqlserver --port 1433 --credentials-file key.json
 ```
 
-### 2. Restaurar Paquetes
-dotnet restore
+Deberás ver el mensaje: "Ready for new connections" escuchando en 127.0.0.1:1433.
 
-### 3. Levantar Base de Datos (Docker)
-Ejecuta este comando para crear y encender el contenedor de SQL Server:
+4. Configuración del Proyecto
+Modifica tu appsettings.Development.json para que la aplicación crea que la BD es local :
 
-docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=TuPasswordFuerte123!" \
-   -p 1433:1433 --name sql_server_local \
-   -d [mcr.microsoft.com/mssql/server:2022-latest](https://mcr.microsoft.com/mssql/server:2022-latest)
+```JSON
 
-### 3. Configurar Cadena de Conexión
-Abre el archivo appsettings.Development.json y asegúrate de que la conexión apunte a tu Docker local:
-
-### 4. Inicializar la Base de Datos (Migraciones)
-
-Crea las tablas ejecutando:
-
-```bash
-    dotnet ef database update
+"ConnectionStrings": {
+  "DefaultConnection": "Server=127.0.0.1,1433;Database=FondoInversionLocal;User Id=sqlserver;Password=TU_PASSWORD_NUBE;TrustServerCertificate=True;"
+}
 ```
 
-### 🚀 Cómo Ejecutar
-Una vez configurado el entorno, sigue estos pasos para iniciar el servicio:
+### 🗄️ Inicialización de Base de Datos
+Independientemente de la opción elegida (A o B), ejecuta las migraciones para crear las tablas:
 
-### 1. Iniciar la aplicación:
+```Bash
 
-```bash
-    dotnet run
+dotnet ef database update
 ```
 
-### 2. Verificar el funcionamiento: 
-La terminal indicará que el servicio escucha en el puerto 5206.
+### ▶️ Ejecución de la API
 
-### 3. Probar Endpoints: 
-Abre tu navegador en la siguiente URL para ver la documentación interactiva:
+## 1. Iniciar la aplicación:
 
-👉 http://localhost:5206/swagger
+# Limpiar el repositorio
+Borra la carpeta /bin y /obj. Esto garantiza que no haya "fantasmas" o archivos compilados viejos que causen errores raros (muy común si cambiaste de rama en Git o modificaste archivos de configuración profundos)
 
-### 4. Configurar entorno local
-    El archivo appsettings.Development.json por defecto no incluye la conexión local.
+```bash
+dotnet clean
+```
+# Compilacion correcta de codigo.
+Verifica que el código compila correctamente antes de intentar ejecutarlo. Si hay un error de sintaxis, fallará aquí claramente en lugar de explotar durante el arranque.
+dotnet clean
 
-    4.1 Abre el archivo: /FondoInversion/appsettings.Development.json.
+# Utilizar perfil de desarrollo
+ Forzar que la variable dea Development, asegurando que se cargue la configuracion local.
+```Bash
+dotnet run --launch-profile http
+```
 
-    4.2 Reemplaza todo su contenido con el siguiente JSON (configurado para Docker y JWT local):
+# 2. Probar Endpoints: Navega a: http://localhost:5206/swagger
 
-    {
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
-    }
-  },
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost,1433;Database=FondoInversionLocal;User Id=sa;Password=TuPasswordFuerte123!;TrustServerCertificate=True;"
-  },
-  "Jwt": {
-    "Secret": "ClaveSecretaSuperSeguraParaDesarrolloLocal123!",
-    "RefreshSecret": "ClaveRefreshParaLocal123!",
-    "Issuer": "broxchain",
-    "Audience": "broxchain"
-  },
-  "AllowedHosts": "*"
-    }
+#### ☁️ Infraestructura y Despliegue (Google Cloud Platform)
+
+Este proyecto utiliza una arquitectura **Serverless** con alta seguridad en la red. A continuación, se detallan los comandos de `gcloud` utilizados para aprovisionar el entorno, basados en la documentación del proyecto.
+
+### 1. Configuración de Red (VPC)
+[cite_start]Se creó una red privada virtual y una subred personalizada para aislar los recursos y evitar accesos públicos no autorizados[cite: 7, 8].
+
+```bash
+# Crear la VPC en modo personalizado
+gcloud compute networks create brox-vpc --subnet-mode=custom
+```
+
+# Crear la Subred en la región us-central1
+```bash
+gcloud compute networks subnets create brox-subnet-1 \
+    --network brox-vpc \
+    --region us-central1 \
+    --range 10.80.1.0/28
+```
+
+### 2. Acceso Privado a Servicios (Private Service Access)
+
+Configuración necesaria para que Cloud Run y SQL Server se comuniquen internamente mediante VPC Peering.
+
+# 2.1. Reservar rango de IP para Peering
+gcloud compute addresses create brox-psa-range \
+    --global \
+    --purpose VPC_PEERING \
+    --prefix-length=16 \
+    --network brox-vpc
+
+# 2.2 Conectar la red privada con los servicios de Google
+gcloud services vpc-peerings connect \
+    --service servicenetworking.googleapis.com \
+    --network brox-vpc \
+    --ranges=brox-psa-range
 
 
-## 🔐 Seguridad y Comunicación (CORS)
+### 3. Base de Datos (Cloud SQL)
+Provisión de la instancia SQL Server 2022. Nota importante: Se utiliza el flag --no-assign-ip para no asignar IP pública por seguridad.
 
-Para permitir la comunicación segura entre el cliente (Frontend) y el servidor, se configuró una política de **CORS (Cross-Origin Resource Sharing)** restrictiva pero funcional.
+```bash
+gcloud sql instances create brox-sqlserver \
+    --database-version=SQLSERVER_2022_STANDARD \
+    --cpu=2 \
+    --memory=8GB \
+    --region=us-central1 \
+    --root-password=PASSWORD_SECRETO \
+    --network=projects/pruebasbroxchain/global/networks/brox-vpc \
+    --no-assign-ip
+```
 
-Esto resuelve los problemas de bloqueo de peticiones HTTP (`Network Error` o `CORS Policy blocked`) permitiendo explícitamente solo los orígenes de confianza.
 
-### Política: `_myAllowSpecificOrigins`
-Se definieron los siguientes orígenes permitidos ("Whitelist"):
+### 4. Conector VPC (Serverless VPC Access)
+Se crea un conector para servir de puente y permitir que las instancias Serverless (Cloud Run) accedan a la red privada.
+```bash
+gcloud compute networks vpc-access connectors create brox-connector-1 \
+    --region us-central1 \
+    --subnet brox-subnet-1 \
+    --min-instances=2 \
+    --max-instances=3
+```
 
-1.  **Entorno de Desarrollo Local:**
-    * `http://localhost:4200` (Cliente Angular/React local)
-    * `http://localhost:5206` (Pruebas de API local)
-2.  **Entorno de Producción (GCP):**
-    * `https://fondo-inversion-front-387791937810.us-central1.run.app` (Frontend desplegado en Cloud Run)
+### 5. Despliegue del Servicio (Cloud Run)
+Finalmente, se despliega el contenedor Docker conectándolo al conector VPC para que alcance la base de datos.
 
-### Configuración en `Program.cs`
-La política habilita el intercambio completo de recursos bajo estas condiciones:
-* ✅ **.AllowAnyHeader()**: Permite cualquier encabezado HTTP.
-* ✅ **.AllowAnyMethod()**: Permite todos los verbos (GET, POST, PUT, DELETE, etc.).
-* ✅ **.AllowCredentials()**: Permite el envío de cookies o credenciales de autenticación.
+```bash
+gcloud run deploy fondo-inversion-service \
+    --image us-central1-docker.pkg.dev/broxel1/broxchain/cloud-run-source-deploy/fondo-inversion-1 \
+    --region us-central1 \
+    --execution-environment gen2 \
+    --vpc-connector brox-connector-1 \
+    --vpc-egress all-traffic
+```
 
-```csharp
-// Ejemplo de la implementación actual en Program.cs
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: "_myAllowSpecificOrigins",
-        policy =>
-        {
-            policy.WithOrigins([
-                "http://localhost:4200", 
-                "http://localhost:5206", 
-                "[https://fondo-inversion-front-387791937810.us-central1.run.app](https://fondo-inversion-front-387791937810.us-central1.run.app)"
-            ])
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
-        });
-});
+
+#### Pipeline de CI/CD (Cloud Build)
+El despliegue está automatizado mediante Google Cloud Build siguiendo estos pasos definidos en cloud-build.yaml :
+
+### 1. Build: Empaquetado del código en una imagen Docker.
+
+```Bash
+gcloud builds submit --config cloud-build.yaml
+```
+
+### 2. Deploy: Despliegue de la imagen en Cloud Run conectada al conector VPC .
+
+```Bash
+
+gcloud run deploy fondo-inversion-service \
+  --image us-central1-docker.pkg.dev/.../fondo-inversion-1 \
+  --vpc-connector brox-connector-1 \
+  --vpc-egress all-traffic
+```
+
+### 🔐 Seguridad y Comunicación (CORS)
+Se configuró una política de CORS restrictiva (_myAllowSpecificOrigins) en Program.cs que permite explícitamente solo los orígenes de confianza:
+
+- http://localhost:4200 (Frontend Local)
+
+- http://localhost:5206 (Swagger Local)
+
+- https://fondo-inversion-front-[ID].us-central1.run.app (Producción GCP)
 
 
 ### 🏗️ Estructura del Proyecto
-La solución sigue una arquitectura modular:
-
-Plaintext
 
 /FondoInversion
 ├── Controllers/       # API Endpoints (Presentación)

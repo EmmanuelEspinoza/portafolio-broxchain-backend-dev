@@ -138,7 +138,7 @@ POST {{baseUrl}}/auth/sso
 Content-type: Application/json
 
 {
-    "email": "Admin@broxchain.com",
+    "email": "mocarranza08@gmail.com",
     "password": "12345"
 }
 ###

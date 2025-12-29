@@ -1,4 +1,5 @@
 using FondoInversion.Models;
+using FondoInversion.DTO; // <--- OBLIGATORIO: Para que reconozca los DTOs
 
 public class AuthService : IAuthService
 {
@@ -19,6 +20,8 @@ public class AuthService : IAuthService
         {
             var userData = await _userRepository.GetUserByEmailAsync(ssoData.email);
             var expires =  DateTime.UtcNow.AddMinutes(30);
+
+            // Se eliminó el Console.WriteLine innecesario
 
             if (userData == null)
             {

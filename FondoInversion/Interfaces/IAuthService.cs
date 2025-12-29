@@ -1,4 +1,5 @@
 using FondoInversion.Models;
+using FondoInversion.DTO;
 
 public interface IAuthService
 {

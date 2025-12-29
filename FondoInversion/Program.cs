@@ -19,6 +19,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     )
 );
 
+
+
 // Registro de repositorios 
 builder.Services.AddTransient<IEncryptionService, AesEncryptionService>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
@@ -67,7 +69,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
         policy =>
         {
-            policy.WithOrigins(["http://localhost:4200", "http://localhost:5206", "https://fondo-inversion-web-991595227055.us-central1.run.app"])
+            policy.WithOrigins(["http://localhost:4200", "http://localhost:5206", "https://fondo-inversion-front-387791937810.us-central1.run.app"])
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -76,10 +78,18 @@ builder.Services.AddCors(options =>
     
 });
 
-// Add services to the container.
-builder.Services.AddControllersWithViews().AddJsonOptions( x=> x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles) ;
-builder.Services.AddOpenApi();
+// Esta configuración arregla los nulos forzando el uso de tus nombres originales
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(options =>
+    {
+        // Mantiene tus mayúsculas/minúsculas tal cual están en el DTO
+        options.JsonSerializerOptions.PropertyNamingPolicy = null; 
+        
+        // Ignora ciclos de referencia (esto ya lo tenías)
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
 
+builder.Services.AddOpenApi(); // <--- ¡AGREGA ESTA LÍNEA AQUÍ!
 
 var app = builder.Build();
 

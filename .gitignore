@@ -1,4 +1,31 @@
-﻿FondoInversion/bin
+﻿# Build outputs
+FondoInversion/bin
 FondoInversion/obj
+
+# Database files
 DB
+
+# SonarQube
 .sonarqube
+
+# Temporary SQL scripts
+*.sql
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# Rider
+.idea/
+*.sln.iml
+
+# macOS
+.DS_Store

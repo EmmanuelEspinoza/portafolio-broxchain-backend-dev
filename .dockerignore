@@ -1,3 +1,30 @@
-.sonarqube
-.vscode
+# Build outputs
+**/bin/
+**/obj/
+
+# Database files
 DB/
+
+# SonarQube
+.sonarqube
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# VS Code
+.vscode/
+
+# Documentation
+README.md
+*.md
+
+# Docker files
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Temporary files
+*.sql
+*.tmp

@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.1",
   "info": {
     "title": "FondoInversion | v1",
     "version": "1.0.0"
@@ -59,9 +59,7 @@
             "description": "Unauthorized",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AnyType"
-                }
+                "schema": { }
               }
             }
           },
@@ -69,9 +67,7 @@
             "description": "Bad Request",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AnyType"
-                }
+                "schema": { }
               }
             }
           }
@@ -121,9 +117,7 @@
             "description": "Unauthorized",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AnyType"
-                }
+                "schema": { }
               }
             }
           },
@@ -131,9 +125,7 @@
             "description": "Bad Request",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AnyType"
-                }
+                "schema": { }
               }
             }
           }
@@ -183,9 +175,7 @@
             "description": "Unauthorized",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AnyType"
-                }
+                "schema": { }
               }
             }
           },
@@ -193,9 +183,7 @@
             "description": "Bad Request",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AnyType"
-                }
+                "schema": { }
               }
             }
           }
@@ -245,9 +233,7 @@
             "description": "Bad Request",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AnyType"
-                }
+                "schema": { }
               }
             }
           }
@@ -297,9 +283,7 @@
             "description": "Bad Request",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AnyType"
-                }
+                "schema": { }
               }
             }
           }
@@ -514,7 +498,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/flujo2"
+                  "$ref": "#/components/schemas/flujo"
                 }
               }
             }
@@ -565,7 +549,11 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32"
             }
           }
@@ -576,7 +564,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/flujo2"
+                  "$ref": "#/components/schemas/flujo"
                 }
               }
             }
@@ -625,7 +613,11 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32"
             }
           }
@@ -655,9 +647,7 @@
             "description": "No Content",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AnyType"
-                }
+                "schema": { }
               }
             }
           },
@@ -697,7 +687,11 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32"
             }
           }
@@ -877,7 +871,11 @@
             "description": "Identificador del precio",
             "required": true,
             "schema": {
-              "type": "integer",
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32"
             }
           }
@@ -938,7 +936,11 @@
             "description": "Identificador del precio",
             "required": true,
             "schema": {
-              "type": "integer",
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32"
             }
           }
@@ -1162,7 +1164,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/user9"
+                    "$ref": "#/components/schemas/user"
                   }
                 }
               }
@@ -1223,7 +1225,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/user14"
+                  "$ref": "#/components/schemas/user"
                 }
               }
             }
@@ -1264,7 +1266,11 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32"
             }
           }
@@ -1275,7 +1281,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/user14"
+                  "$ref": "#/components/schemas/user"
                 }
               }
             }
@@ -1315,7 +1321,11 @@
             "description": "Id del suario a actualizar",
             "required": true,
             "schema": {
-              "type": "integer",
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32"
             }
           }
@@ -1382,104 +1392,40 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "userID": {
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "intentos": {
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "ultimoIntento": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
           },
           "user": {
-            "$ref": "#/components/schemas/user2"
+            "$ref": "#/components/schemas/user"
           }
         }
-      },
-      "accesoUser2": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "userID": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "intentos": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ultimoIntento": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "user": {
-            "$ref": "#/components/schemas/user6"
-          }
-        }
-      },
-      "accesoUser3": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "userID": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "intentos": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ultimoIntento": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "user": {
-            "$ref": "#/components/schemas/user10"
-          }
-        }
-      },
-      "accesoUser4": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "userID": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "intentos": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ultimoIntento": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "user": {
-            "$ref": "#/components/schemas/user15"
-          }
-        }
-      },
-      "AnyType": {
-        "type": "integer"
       },
       "AuthResponse": {
         "type": "object",
@@ -1509,7 +1455,11 @@
         "type": "object",
         "properties": {
           "inversionistaId": {
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "diaMovimiento": {
@@ -1517,11 +1467,19 @@
             "format": "date"
           },
           "importe": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           },
           "comision": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           }
         }
@@ -1538,7 +1496,11 @@
             "format": "date"
           },
           "precioMxn": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           }
         }
@@ -1587,11 +1549,19 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "inversionistaId": {
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "diaMovimiento": {
@@ -1599,11 +1569,19 @@
             "format": "date"
           },
           "importe": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           },
           "comision": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           }
         }
@@ -1616,7 +1594,11 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "fechaPrecio": {
@@ -1624,12 +1606,18 @@
             "format": "date"
           },
           "precioMxn": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           },
           "isActive": {
-            "type": "boolean",
-            "nullable": true
+            "type": [
+              "null",
+              "boolean"
+            ]
           }
         }
       },
@@ -1637,36 +1625,50 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "name": {
             "maxLength": 500,
             "minLength": 0,
-            "type": "string",
-            "nullable": true
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "correo": {
             "maxLength": 150,
             "minLength": 0,
-            "type": "string",
-            "nullable": true
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "rfc": {
             "maxLength": 13,
             "minLength": 12,
-            "type": "string",
-            "nullable": true
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "telefono": {
             "maxLength": 20,
             "minLength": 0,
-            "type": "string",
-            "nullable": true
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "curp": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "isActive": {
             "type": "boolean"
@@ -1677,11 +1679,19 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "inversionista_id": {
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "dia_movimiento": {
@@ -1689,99 +1699,23 @@
             "format": "date"
           },
           "importe": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           },
           "comision": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           },
           "inversionista": {
             "$ref": "#/components/schemas/user"
-          }
-        }
-      },
-      "flujo2": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "inversionista_id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "dia_movimiento": {
-            "type": "string",
-            "format": "date"
-          },
-          "importe": {
-            "type": "number",
-            "format": "double"
-          },
-          "comision": {
-            "type": "number",
-            "format": "double"
-          },
-          "inversionista": {
-            "$ref": "#/components/schemas/user5"
-          }
-        }
-      },
-      "flujo3": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "inversionista_id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "dia_movimiento": {
-            "type": "string",
-            "format": "date"
-          },
-          "importe": {
-            "type": "number",
-            "format": "double"
-          },
-          "comision": {
-            "type": "number",
-            "format": "double"
-          },
-          "inversionista": {
-            "$ref": "#/components/schemas/user11"
-          }
-        }
-      },
-      "flujo4": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "inversionista_id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "dia_movimiento": {
-            "type": "string",
-            "format": "date"
-          },
-          "importe": {
-            "type": "number",
-            "format": "double"
-          },
-          "comision": {
-            "type": "number",
-            "format": "double"
-          },
-          "inversionista": {
-            "$ref": "#/components/schemas/user16"
           }
         }
       },
@@ -1796,23 +1730,43 @@
             "type": "string"
           },
           "movimientoUnidad": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           },
           "movimientoMxn": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           },
           "precio": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           },
           "saldoUnidad": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           },
           "saldoMxn": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           }
         }
@@ -1833,7 +1787,11 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "fecha_precio": {
@@ -1841,7 +1799,11 @@
             "format": "date"
           },
           "precio_mxn": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           }
         }
@@ -1864,25 +1826,39 @@
             "type": "string"
           },
           "valorPrincipal": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           },
           "valorSecundario": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
           },
           "valorTerciario": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
           },
           "color": {
             "type": "string"
           },
           "tooltip": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -1908,11 +1884,19 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "userID": {
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "refreshToken": {
@@ -1923,92 +1907,15 @@
             "format": "date-time"
           },
           "activo": {
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "user": {
-            "$ref": "#/components/schemas/user3"
-          }
-        }
-      },
-      "token2": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "userID": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "refreshToken": {
-            "type": "string"
-          },
-          "expiracion": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "activo": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "user": {
-            "$ref": "#/components/schemas/user7"
-          }
-        }
-      },
-      "token3": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "userID": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "refreshToken": {
-            "type": "string"
-          },
-          "expiracion": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "activo": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "user": {
-            "$ref": "#/components/schemas/user12"
-          }
-        }
-      },
-      "token4": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "userID": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "refreshToken": {
-            "type": "string"
-          },
-          "expiracion": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "activo": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "user": {
-            "$ref": "#/components/schemas/user17"
+            "$ref": "#/components/schemas/user"
           }
         }
       },
@@ -2016,7 +1923,11 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "requestBody": {
@@ -2027,80 +1938,15 @@
             "format": "date-time"
           },
           "userID": {
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "user": {
-            "$ref": "#/components/schemas/user4"
-          }
-        }
-      },
-      "transactionLog2": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "requestBody": {
-            "type": "string"
-          },
-          "fecha": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "userID": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "user": {
-            "$ref": "#/components/schemas/user8"
-          }
-        }
-      },
-      "transactionLog3": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "requestBody": {
-            "type": "string"
-          },
-          "fecha": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "userID": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "user": {
-            "$ref": "#/components/schemas/user13"
-          }
-        }
-      },
-      "transactionLog4": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "requestBody": {
-            "type": "string"
-          },
-          "fecha": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "userID": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "user": {
-            "$ref": "#/components/schemas/user18"
+            "$ref": "#/components/schemas/user"
           }
         }
       },
@@ -2108,7 +1954,11 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "name": {
@@ -2135,410 +1985,9 @@
             }
           },
           "flujos": {
-            "$ref": "#/components/schemas/#/items/properties/inversionista/properties/accesoUsers/items/properties/user/properties/flujos"
-          },
-          "tokens": {
-            "$ref": "#/components/schemas/#/items/properties/inversionista/properties/accesoUsers/items/properties/user/properties/tokens"
-          },
-          "transactionLogs": {
-            "$ref": "#/components/schemas/#/items/properties/inversionista/properties/accesoUsers/items/properties/user/properties/tokens/items/properties/user/properties/transactionLogs"
-          }
-        }
-      },
-      "user10": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "rfc": {
-            "type": "string"
-          },
-          "curp": {
-            "type": "string"
-          },
-          "correo": {
-            "maxLength": 250,
-            "minLength": 0,
-            "type": "string"
-          },
-          "telefono": {
-            "type": "string"
-          },
-          "accesoUsers": {
-            "$ref": "#/components/schemas/#/items/properties/accesoUsers"
-          },
-          "flujos": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/flujo3"
-            }
-          },
-          "tokens": {
-            "$ref": "#/components/schemas/#/items/properties/accesoUsers/items/properties/user/properties/flujos/items/properties/inversionista/properties/tokens"
-          },
-          "transactionLogs": {
-            "$ref": "#/components/schemas/#/items/properties/accesoUsers/items/properties/user/properties/flujos/items/properties/inversionista/properties/tokens/items/properties/user/properties/transactionLogs"
-          }
-        }
-      },
-      "user11": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "rfc": {
-            "type": "string"
-          },
-          "curp": {
-            "type": "string"
-          },
-          "correo": {
-            "maxLength": 250,
-            "minLength": 0,
-            "type": "string"
-          },
-          "telefono": {
-            "type": "string"
-          },
-          "accesoUsers": {
-            "$ref": "#/components/schemas/#/items/properties/accesoUsers"
-          },
-          "flujos": {
-            "$ref": "#/components/schemas/#/items/properties/accesoUsers/items/properties/user/properties/flujos"
-          },
-          "tokens": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/token3"
-            }
-          },
-          "transactionLogs": {
-            "$ref": "#/components/schemas/#/items/properties/accesoUsers/items/properties/user/properties/flujos/items/properties/inversionista/properties/tokens/items/properties/user/properties/transactionLogs"
-          }
-        }
-      },
-      "user12": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "rfc": {
-            "type": "string"
-          },
-          "curp": {
-            "type": "string"
-          },
-          "correo": {
-            "maxLength": 250,
-            "minLength": 0,
-            "type": "string"
-          },
-          "telefono": {
-            "type": "string"
-          },
-          "accesoUsers": {
-            "$ref": "#/components/schemas/#/items/properties/accesoUsers"
-          },
-          "flujos": {
-            "$ref": "#/components/schemas/#/items/properties/accesoUsers/items/properties/user/properties/flujos"
-          },
-          "tokens": {
-            "$ref": "#/components/schemas/#/items/properties/accesoUsers/items/properties/user/properties/flujos/items/properties/inversionista/properties/tokens"
-          },
-          "transactionLogs": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/transactionLog3"
-            }
-          }
-        }
-      },
-      "user13": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "rfc": {
-            "type": "string"
-          },
-          "curp": {
-            "type": "string"
-          },
-          "correo": {
-            "maxLength": 250,
-            "minLength": 0,
-            "type": "string"
-          },
-          "telefono": {
-            "type": "string"
-          },
-          "accesoUsers": {
-            "$ref": "#/components/schemas/#/items/properties/accesoUsers"
-          },
-          "flujos": {
-            "$ref": "#/components/schemas/#/items/properties/accesoUsers/items/properties/user/properties/flujos"
-          },
-          "tokens": {
-            "$ref": "#/components/schemas/#/items/properties/accesoUsers/items/properties/user/properties/flujos/items/properties/inversionista/properties/tokens"
-          },
-          "transactionLogs": {
-            "$ref": "#/components/schemas/#/items/properties/accesoUsers/items/properties/user/properties/flujos/items/properties/inversionista/properties/tokens/items/properties/user/properties/transactionLogs"
-          }
-        }
-      },
-      "user14": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "rfc": {
-            "type": "string"
-          },
-          "curp": {
-            "type": "string"
-          },
-          "correo": {
-            "maxLength": 250,
-            "minLength": 0,
-            "type": "string"
-          },
-          "telefono": {
-            "type": "string"
-          },
-          "accesoUsers": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/accesoUser4"
-            }
-          },
-          "flujos": {
-            "$ref": "#/components/schemas/#/properties/accesoUsers/items/properties/user/properties/flujos"
-          },
-          "tokens": {
-            "$ref": "#/components/schemas/#/properties/accesoUsers/items/properties/user/properties/flujos/items/properties/inversionista/properties/tokens"
-          },
-          "transactionLogs": {
-            "$ref": "#/components/schemas/#/properties/accesoUsers/items/properties/user/properties/flujos/items/properties/inversionista/properties/tokens/items/properties/user/properties/transactionLogs"
-          }
-        }
-      },
-      "user15": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "rfc": {
-            "type": "string"
-          },
-          "curp": {
-            "type": "string"
-          },
-          "correo": {
-            "maxLength": 250,
-            "minLength": 0,
-            "type": "string"
-          },
-          "telefono": {
-            "type": "string"
-          },
-          "accesoUsers": {
-            "$ref": "#/components/schemas/#/properties/accesoUsers"
-          },
-          "flujos": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/flujo4"
-            }
-          },
-          "tokens": {
-            "$ref": "#/components/schemas/#/properties/accesoUsers/items/properties/user/properties/flujos/items/properties/inversionista/properties/tokens"
-          },
-          "transactionLogs": {
-            "$ref": "#/components/schemas/#/properties/accesoUsers/items/properties/user/properties/flujos/items/properties/inversionista/properties/tokens/items/properties/user/properties/transactionLogs"
-          }
-        }
-      },
-      "user16": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "rfc": {
-            "type": "string"
-          },
-          "curp": {
-            "type": "string"
-          },
-          "correo": {
-            "maxLength": 250,
-            "minLength": 0,
-            "type": "string"
-          },
-          "telefono": {
-            "type": "string"
-          },
-          "accesoUsers": {
-            "$ref": "#/components/schemas/#/properties/accesoUsers"
-          },
-          "flujos": {
-            "$ref": "#/components/schemas/#/properties/accesoUsers/items/properties/user/properties/flujos"
-          },
-          "tokens": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/token4"
-            }
-          },
-          "transactionLogs": {
-            "$ref": "#/components/schemas/#/properties/accesoUsers/items/properties/user/properties/flujos/items/properties/inversionista/properties/tokens/items/properties/user/properties/transactionLogs"
-          }
-        }
-      },
-      "user17": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "rfc": {
-            "type": "string"
-          },
-          "curp": {
-            "type": "string"
-          },
-          "correo": {
-            "maxLength": 250,
-            "minLength": 0,
-            "type": "string"
-          },
-          "telefono": {
-            "type": "string"
-          },
-          "accesoUsers": {
-            "$ref": "#/components/schemas/#/properties/accesoUsers"
-          },
-          "flujos": {
-            "$ref": "#/components/schemas/#/properties/accesoUsers/items/properties/user/properties/flujos"
-          },
-          "tokens": {
-            "$ref": "#/components/schemas/#/properties/accesoUsers/items/properties/user/properties/flujos/items/properties/inversionista/properties/tokens"
-          },
-          "transactionLogs": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/transactionLog4"
-            }
-          }
-        }
-      },
-      "user18": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "rfc": {
-            "type": "string"
-          },
-          "curp": {
-            "type": "string"
-          },
-          "correo": {
-            "maxLength": 250,
-            "minLength": 0,
-            "type": "string"
-          },
-          "telefono": {
-            "type": "string"
-          },
-          "accesoUsers": {
-            "$ref": "#/components/schemas/#/properties/accesoUsers"
-          },
-          "flujos": {
-            "$ref": "#/components/schemas/#/properties/accesoUsers/items/properties/user/properties/flujos"
-          },
-          "tokens": {
-            "$ref": "#/components/schemas/#/properties/accesoUsers/items/properties/user/properties/flujos/items/properties/inversionista/properties/tokens"
-          },
-          "transactionLogs": {
-            "$ref": "#/components/schemas/#/properties/accesoUsers/items/properties/user/properties/flujos/items/properties/inversionista/properties/tokens/items/properties/user/properties/transactionLogs"
-          }
-        }
-      },
-      "user2": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "rfc": {
-            "type": "string"
-          },
-          "curp": {
-            "type": "string"
-          },
-          "correo": {
-            "maxLength": 250,
-            "minLength": 0,
-            "type": "string"
-          },
-          "telefono": {
-            "type": "string"
-          },
-          "accesoUsers": {
-            "$ref": "#/components/schemas/#/items/properties/inversionista/properties/accesoUsers"
-          },
-          "flujos": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/#/items"
+              "$ref": "#/components/schemas/flujo"
             }
           },
           "tokens": {
@@ -2548,291 +1997,10 @@
             }
           },
           "transactionLogs": {
-            "$ref": "#/components/schemas/#/items/properties/inversionista/properties/accesoUsers/items/properties/user/properties/tokens/items/properties/user/properties/transactionLogs"
-          }
-        }
-      },
-      "user3": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "rfc": {
-            "type": "string"
-          },
-          "curp": {
-            "type": "string"
-          },
-          "correo": {
-            "maxLength": 250,
-            "minLength": 0,
-            "type": "string"
-          },
-          "telefono": {
-            "type": "string"
-          },
-          "accesoUsers": {
-            "$ref": "#/components/schemas/#/items/properties/inversionista/properties/accesoUsers"
-          },
-          "flujos": {
-            "$ref": "#/components/schemas/#/items/properties/inversionista/properties/accesoUsers/items/properties/user/properties/flujos"
-          },
-          "tokens": {
-            "$ref": "#/components/schemas/#/items/properties/inversionista/properties/accesoUsers/items/properties/user/properties/tokens"
-          },
-          "transactionLogs": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/transactionLog"
             }
-          }
-        }
-      },
-      "user4": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "rfc": {
-            "type": "string"
-          },
-          "curp": {
-            "type": "string"
-          },
-          "correo": {
-            "maxLength": 250,
-            "minLength": 0,
-            "type": "string"
-          },
-          "telefono": {
-            "type": "string"
-          },
-          "accesoUsers": {
-            "$ref": "#/components/schemas/#/items/properties/inversionista/properties/accesoUsers"
-          },
-          "flujos": {
-            "$ref": "#/components/schemas/#/items/properties/inversionista/properties/accesoUsers/items/properties/user/properties/flujos"
-          },
-          "tokens": {
-            "$ref": "#/components/schemas/#/items/properties/inversionista/properties/accesoUsers/items/properties/user/properties/tokens"
-          },
-          "transactionLogs": {
-            "$ref": "#/components/schemas/#/items/properties/inversionista/properties/accesoUsers/items/properties/user/properties/tokens/items/properties/user/properties/transactionLogs"
-          }
-        }
-      },
-      "user5": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "rfc": {
-            "type": "string"
-          },
-          "curp": {
-            "type": "string"
-          },
-          "correo": {
-            "maxLength": 250,
-            "minLength": 0,
-            "type": "string"
-          },
-          "telefono": {
-            "type": "string"
-          },
-          "accesoUsers": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/accesoUser2"
-            }
-          },
-          "flujos": {
-            "$ref": "#/components/schemas/#/properties/inversionista/properties/accesoUsers/items/properties/user/properties/flujos"
-          },
-          "tokens": {
-            "$ref": "#/components/schemas/#/properties/inversionista/properties/accesoUsers/items/properties/user/properties/tokens"
-          },
-          "transactionLogs": {
-            "$ref": "#/components/schemas/#/properties/inversionista/properties/accesoUsers/items/properties/user/properties/tokens/items/properties/user/properties/transactionLogs"
-          }
-        }
-      },
-      "user6": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "rfc": {
-            "type": "string"
-          },
-          "curp": {
-            "type": "string"
-          },
-          "correo": {
-            "maxLength": 250,
-            "minLength": 0,
-            "type": "string"
-          },
-          "telefono": {
-            "type": "string"
-          },
-          "accesoUsers": {
-            "$ref": "#/components/schemas/#/properties/inversionista/properties/accesoUsers"
-          },
-          "flujos": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/flujo"
-            }
-          },
-          "tokens": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/token2"
-            }
-          },
-          "transactionLogs": {
-            "$ref": "#/components/schemas/#/properties/inversionista/properties/accesoUsers/items/properties/user/properties/tokens/items/properties/user/properties/transactionLogs"
-          }
-        }
-      },
-      "user7": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "rfc": {
-            "type": "string"
-          },
-          "curp": {
-            "type": "string"
-          },
-          "correo": {
-            "maxLength": 250,
-            "minLength": 0,
-            "type": "string"
-          },
-          "telefono": {
-            "type": "string"
-          },
-          "accesoUsers": {
-            "$ref": "#/components/schemas/#/properties/inversionista/properties/accesoUsers"
-          },
-          "flujos": {
-            "$ref": "#/components/schemas/#/properties/inversionista/properties/accesoUsers/items/properties/user/properties/flujos"
-          },
-          "tokens": {
-            "$ref": "#/components/schemas/#/properties/inversionista/properties/accesoUsers/items/properties/user/properties/tokens"
-          },
-          "transactionLogs": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/transactionLog2"
-            }
-          }
-        }
-      },
-      "user8": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "rfc": {
-            "type": "string"
-          },
-          "curp": {
-            "type": "string"
-          },
-          "correo": {
-            "maxLength": 250,
-            "minLength": 0,
-            "type": "string"
-          },
-          "telefono": {
-            "type": "string"
-          },
-          "accesoUsers": {
-            "$ref": "#/components/schemas/#/properties/inversionista/properties/accesoUsers"
-          },
-          "flujos": {
-            "$ref": "#/components/schemas/#/properties/inversionista/properties/accesoUsers/items/properties/user/properties/flujos"
-          },
-          "tokens": {
-            "$ref": "#/components/schemas/#/properties/inversionista/properties/accesoUsers/items/properties/user/properties/tokens"
-          },
-          "transactionLogs": {
-            "$ref": "#/components/schemas/#/properties/inversionista/properties/accesoUsers/items/properties/user/properties/tokens/items/properties/user/properties/transactionLogs"
-          }
-        }
-      },
-      "user9": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "rfc": {
-            "type": "string"
-          },
-          "curp": {
-            "type": "string"
-          },
-          "correo": {
-            "maxLength": 250,
-            "minLength": 0,
-            "type": "string"
-          },
-          "telefono": {
-            "type": "string"
-          },
-          "accesoUsers": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/accesoUser3"
-            }
-          },
-          "flujos": {
-            "$ref": "#/components/schemas/#/items/properties/accesoUsers/items/properties/user/properties/flujos"
-          },
-          "tokens": {
-            "$ref": "#/components/schemas/#/items/properties/accesoUsers/items/properties/user/properties/flujos/items/properties/inversionista/properties/tokens"
-          },
-          "transactionLogs": {
-            "$ref": "#/components/schemas/#/items/properties/accesoUsers/items/properties/user/properties/flujos/items/properties/inversionista/properties/tokens/items/properties/user/properties/transactionLogs"
           }
         }
       },
@@ -2859,11 +2027,19 @@
         "type": "object",
         "properties": {
           "montoCirculacion": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           },
           "valorMercado": {
-            "type": "number",
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           }
         }
